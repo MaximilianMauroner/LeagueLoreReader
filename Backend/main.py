@@ -3,38 +3,52 @@ from bs4 import BeautifulSoup
 import sys
 from gtts import gTTS
 import os
+from os.path import exists
+import json
 
+def prepareJson(json):
+    story = ""
+    id = json["id"]
+    title = ""
+    if "story" in json:
+        title = json["story"]["title"]
+        for sections in json["story"]["story-sections"]:
+            for section in sections["story-subsections"]:
+                story+= section["content"]
+    else:
+        title = json["title"]
+        story = json['champion']["biography"]["full"]
+    return story, title, id
 
-def getWebsite(url):
+def getWebsite(url, retry = False):
+    if retry == False:
+        url  = url.split(".com/en_US")[1]
+        url = "https://universe-meeps.leagueoflegends.com/v1/en_us" + url + "index.json"
     page = requests.get(url)
     if page.status_code == 200:
-        soup = BeautifulSoup(page.content, 'html.parser')
-        content = soup.find("meta", property="og:description")
-        title = soup.find_all('title')[0]
-        lore_text = content.get("content", None)
-        return lore_text ,title.get_text()
+        responseParsedJasonInHTMLContent, title, id = prepareJson(page.json())
+        soup = BeautifulSoup(responseParsedJasonInHTMLContent, 'html.parser').text
+        return soup, title,id
     else:
-        return False, False
+        if retry == False:
+            temp = url.split("story/champion/")
+            color = temp[1].split("/")[0]+ "/"
+            s = temp[0]+"champions/"+ color + "index.json"
+            return getWebsite(s, True)
+        return False, False, False
 
 
-def pytts(text, title):
-    engine = pyttsx3.init('espeak')
-    engine.setProperty('rate', 275)
 
-    voices = engine.getProperty('voices')
-    engine.setProperty('voice', voices[0].id)
 
-    engine.save_to_file(text, 'test.mp3')
-    engine.runAndWait()
-#
-#     print(title+'.mp3')
+def checkIfFileExists(fileName):
+    return
     
 
 
 if __name__ == '__main__':
     url = sys.argv[1]
-    text, title = getWebsite(url)
-    # pytts("text", "title")
-    tts = gTTS(text, lang='en', slow=False)
-    tts.save("../LoreFiles/"+ title+".mp3")
-    print((title+".mp3").strip())
+    text, title, id = getWebsite(url)
+    if not exists("../LoreFiles/"+ id+".mp3"):
+        tts = gTTS(text, lang='en', slow=False)
+        tts.save("../LoreFiles/"+ id+".mp3")
+    print((id+".mp3").strip())

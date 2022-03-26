@@ -1,4 +1,4 @@
-import React, {useState, useCallback} from 'react';
+import React, {useState, useCallback, useEffect} from 'react';
 import {Search as SearchIcon} from '@material-ui/icons'
 import './App.css';
 
@@ -8,20 +8,33 @@ import axios from "axios";
 
 function App() {
     const [link, setLink] = useState(0);
-    const [url, setUrl] = useState("https://backend.lorereader.mauroner.eu/");
-    const [baseFileUrl, setBaseFileUrl] = useState("https://files.lorereader.mauroner.eu/");
-    const [fileUrl, setFileUrl] = useState(0);
+    const [url] = useState("https://backend.lorereader.mauroner.eu/");
+    const [baseFileUrl] = useState("https://files.lorereader.mauroner.eu/");
+    const [fileUrls, setFileUrls] = useState([]);
     const [loading, setLoading] = useState(false);
 
     const sendLink = (() => {
         const axios = require('axios');
         setLoading(true);
         axios.post(url + "?url=" + link, {}).then(function (response) {
-            setFileUrl(response.data.filePath)
-            console.log(encodeURI(baseFileUrl + response.data.filePath))
+            let files = fileUrls;
+            if (files.indexOf(response.data.filePath) === -1) {
+                files.push(response.data.filePath)
+            }
+            setFileUrls(files)
             setLoading(false);
         })
     });
+    const loadExistingFiles = (() => {
+        axios.post(url, {}).then(function (response) {
+            setFileUrls(response.data.filePaths)
+            setLoading(false);
+        })
+    });
+
+    useEffect(() => {
+        loadExistingFiles()
+    }, [link]);
 
     const _handleKeyDown = useCallback((e) => {
         if (e.key === 'Enter') {
@@ -61,13 +74,19 @@ function App() {
                         </button>
                     </div> : null}
             </div>
-            {fileUrl && !loading ? <div className={"container h-32 sm:h-28 flex flex-col justify-center items-center px-4 sm:px-6 lg:px-8"}>
-                <div className={"text-white pb-2"}>{fileUrl}</div>
-                <ReactAudioPlayer className={"w-6/12 sm:w-full"}
-                                  src={encodeURI(baseFileUrl + fileUrl)}
-                                  autoPlay={false}
-                                  controls/>
-            </div> : null}
+            {fileUrls.length > 0 && !loading ?
+                fileUrls.map((file) => (
+                    (
+                        <div className={"container h-32 sm:h-28 flex flex-col justify-center items-center px-4 sm:px-6 lg:px-8"}>
+                            <div className={"text-white pb-2"}>{file}</div>
+                            <ReactAudioPlayer className={"w-6/12 sm:w-full"}
+                                              src={encodeURI(baseFileUrl + file)}
+                                              autoPlay={false}
+                                              controls/>
+                        </div>
+                    )
+                ))
+                : null}
         </div>
     );
 

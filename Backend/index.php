@@ -1,12 +1,9 @@
 <?php
 $ajax = new index();
 if (isset($_GET['url'])) {
-    $ajax->run($_GET['url']);
+    $ajax->run("get_file");
 } else {
-    echo json_encode(array(
-        "message" => "No action provided.",
-        "error" => "#876",
-    ));
+    $ajax->run("get_all_files");
 }
 
 class index
@@ -18,7 +15,7 @@ class index
 
     }
 
-    public function run($url)
+    public function run($action)
     {
 
 
@@ -35,9 +32,25 @@ class index
             if (isset($_SERVER['HTTP_ACCESS_CONTROL_REQUEST_HEADERS']))
                 header("Access-Control-Allow-Headers: {$_SERVER['HTTP_ACCESS_CONTROL_REQUEST_HEADERS']}");
         }
+        $this->$action();
+    }
+
+    public function get_file()
+    {
+        $url = $_GET['url'];
         $sting = "python3 main.py " . $url;
 
         $ret = shell_exec($sting);
         echo json_encode(["filePath" => trim($ret)]);
+    }
+
+    public function get_all_files()
+    {
+        $files = array_diff(scandir("../LoreFiles/"), array('.', '..'));
+        $retArr = [];
+        foreach ($files as $file){
+            $retArr["filePaths"][] = $file;
+        }
+        echo json_encode($retArr);
     }
 }
