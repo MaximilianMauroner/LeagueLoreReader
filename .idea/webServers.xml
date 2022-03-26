@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="WebServers">
+    <option name="servers">
+      <webServer id="90e5f893-8076-470c-9ba8-7d4b2323b404" name="server_backend" url="http://panel.mauroner.eu">
+        <fileTransfer host="panel.mauroner.eu" port="21">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" passiveMode="true" shareSSLContext="true" />
+          </advancedOptions>
+        </fileTransfer>
+      </webServer>
+      <webServer id="e8fa53dd-60db-465c-b65d-4e5709b0c8ce" name="server_frontend" url="http://panel.mauroner.eu">
+        <fileTransfer host="panel.mauroner.eu" port="21">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" passiveMode="true" shareSSLContext="true" />
+          </advancedOptions>
+        </fileTransfer>
+      </webServer>
+    </option>
+  </component>
+</project>
