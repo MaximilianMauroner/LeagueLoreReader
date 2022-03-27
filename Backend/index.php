@@ -46,7 +46,18 @@ class index
 
     public function get_all_files()
     {
-        $files = array_diff(scandir("../LoreFiles/"), array('.', '..'));
+        $ignored = array('.', '..', '.svn', '.htaccess');
+        $dir = "../LoreFiles/";
+
+        $files = array();
+        foreach (scandir($dir) as $file) {
+            if (in_array($file, $ignored)) continue;
+            $files[$file] = filemtime($dir . '/' . $file);
+        }
+
+        arsort($files);
+        $files = array_keys($files);
+
         $retArr = [];
         foreach ($files as $file){
             $retArr["filePaths"][] = $file;

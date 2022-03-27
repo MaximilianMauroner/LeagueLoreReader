@@ -25,6 +25,7 @@ function App() {
             setLoading(false);
         })
     });
+
     const loadExistingFiles = (() => {
         axios.post(url, {}).then(function (response) {
             setFileUrls(response.data.filePaths)
@@ -36,15 +37,15 @@ function App() {
         loadExistingFiles()
     }, [link]);
 
-    const _handleKeyDown = useCallback((e) => {
+    const _handleKeyDown = ((e) => {
         if (e.key === 'Enter') {
             sendLink()
         }
-    }, [link])
+    })
 
 
     return (
-        <div className="bg-gray-800 h-screen">
+        <div className="bg-gray-800 min-h-screen h-full">
             <div className="container h-32 sm:h-28 flex justify-center items-center px-4 sm:px-6 lg:px-8">
                 {loading ? <div className="flex items-center justify-center w-full h-full">
                     <div className="flex justify-center items-center space-x-1 text-sm text-gray-700">
