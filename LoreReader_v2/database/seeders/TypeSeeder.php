@@ -15,12 +15,13 @@ class TypeSeeder extends Seeder
     public function run()
     {
         $types = [
-            "Champion Story", "Colour Story"
+            ["name" => "Champion Story", "slug" => "champion_story"], ["name" => "Colour Story", "slug" => "colour_story"]
         ];
 
         foreach ($types as $type) {
-            Type::create([
-                'name' => $type
+            Type::firstOrCreate([
+                'name' => $type['name'],
+                'slug' => $type['slug']
             ]);
         }
     }

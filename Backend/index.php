@@ -59,7 +59,7 @@ class index
         $files = array_keys($files);
 
         $retArr = [];
-        foreach ($files as $file){
+        foreach ($files as $file) {
             $retArr["filePaths"][] = $file;
         }
         echo json_encode($retArr);

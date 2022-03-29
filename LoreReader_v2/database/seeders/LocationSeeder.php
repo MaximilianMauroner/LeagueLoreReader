@@ -21,7 +21,7 @@ class LocationSeeder extends Seeder
         if ($location_res->ok()) {
             $locations = $location_res->json();
             foreach ($locations['factions'] as $location) {
-                Location::create([
+                Location::firstOrCreate([
                     "title" => $location["name"],
                     "slug" => $location["slug"],
                     "description" => "",
@@ -30,7 +30,7 @@ class LocationSeeder extends Seeder
                 ]);
             }
         }
-        Location::create([
+        Location::firstOrCreate([
             "title" => "Unaffiliated",
             "slug" => "unaffiliated",
             "description" => "",

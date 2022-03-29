@@ -21,5 +21,6 @@ class DatabaseSeeder extends Seeder
         $this->call(TypeSeeder::class);
         $this->call(LocationSeeder::class);
         $this->call(ChampionSeeder::class);
+        $this->call(StorySeeder::class);
     }
 }

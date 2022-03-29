@@ -17,7 +17,6 @@ class CreateChampionStoryTable extends Migration
             $table->id();
             $table->foreignId('champion_id')->constrained();
             $table->foreignId('story_id')->constrained();
-            $table->timestamps();
         });
     }
 
