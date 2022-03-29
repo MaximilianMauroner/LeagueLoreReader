@@ -43,7 +43,13 @@ class ChampionStoriesToFileCommand extends Command
         $champion = Champion::whereHas('stories', function ($stories) {
             $stories->doesntHave('file');
         })->first();
+        if($champion == null){
+            return 1;
+        }
         $story = $champion->stories()->where('champion_id', $champion->id)->doesntHave('file')->first();
+        if($story == null){
+            return 1;
+        }
         $fp = fopen('story.json', 'w');
         fwrite($fp, json_encode($story));
         fclose($fp);
