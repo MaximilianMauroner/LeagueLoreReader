@@ -47,7 +47,7 @@ class ChampionStoriesToFileCommand extends Command
         $fp = fopen('story.json', 'w');
         fwrite($fp, json_encode($story));
         fclose($fp);
-        $cmd = "python main.py";
+        $cmd = "python3 main.py";
         $ret = shell_exec($cmd);
         if ($ret == 1) {
             File::firstOrCreate([
