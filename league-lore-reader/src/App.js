@@ -22,19 +22,19 @@ class App extends Component {
         return (
             <div className={"h-screen dark:bg-gray-900 bg-gray-100"}>
                 <div className={"dark:bg-gray-900 h-auto bg-gray-100"}>
-                    <Router>
-                        <div className={"min-h-screen"}>
+                    <div className={"min-h-screen"}>
+                        <Router>
                             <Switch>
-                                <Route exact path={"/champion/:slug/story/:text_id"} component={Story}/>
-                                <Route exact path={"/champion/:slug"} component={Champion}/>
-                                <Route exact path={"/home"} component={Home}/>
+                                <Route path={"/champion/:slug/story/:text_id"} component={Story}/>
+                                <Route path={"/champion/:slug"} component={Champion}/>
+                                <Route path={"/home"} component={Home}/>
                                 <Route>
                                     <Redirect to="/home"/>
                                     <Home/>
                                 </Route>
                             </Switch>
-                        </div>
-                    </Router>
+                        </Router>
+                    </div>
                 </div>
             </div>
         );

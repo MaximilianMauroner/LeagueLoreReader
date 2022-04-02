@@ -90,8 +90,8 @@ class Champion extends React.Component {
                             <ViewEntityBox
                                 entity={{
                                     image_url: champion.image_url,
-                                    name: champion.title,
-                                    title: champion.name,
+                                    name: champion.name,
+                                    title: champion.title,
                                     link: "/champion/" + champion.slug
                                 }}/>
                         </div>

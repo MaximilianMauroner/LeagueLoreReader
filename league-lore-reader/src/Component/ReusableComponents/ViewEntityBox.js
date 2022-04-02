@@ -1,9 +1,15 @@
-import {Link} from "react-router-dom";
+import {Link, Redirect} from "react-router-dom";
+import {useState} from "react";
 
 function ViewEntityBox({entity}) {
+    const [redirect, setRedirect] = useState(false);
+
+    if (redirect === true) {
+        return (<Redirect to={entity.link}/>)
+    }
     return (
         <Link to={entity.link}>
-            <div className="py-6 px-4">
+            <div onClick={() => setRedirect(true)} className="py-6 px-4">
                 <div className="max-w-4xl mx-auto grid grid-cols-1 hover:-translate-y-3 hover:scale-110 ease-in-out duration-300">
                     <div className="relative p-3 col-start-1 row-start-1 flex flex-col-reverse rounded-lg bg-gradient-to-t from-black/75 via-black/0 ">
                         {entity.name ? <p className="text-sm leading-4 font-medium text-white">{entity.title}</p> : null}
@@ -16,6 +22,7 @@ function ViewEntityBox({entity}) {
             </div>
         </Link>
     )
+
 }
 
 export default ViewEntityBox;
