@@ -16,6 +16,7 @@ class CreateChampionsTable extends Migration
         Schema::create('champions', function (Blueprint $table) {
             $table->id();
             $table->string('name');
+            $table->string('title')->nullable();
             $table->string('slug');
             $table->date('release_date');
             $table->foreignId('location_id')->constrained();

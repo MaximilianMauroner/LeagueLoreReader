@@ -9,7 +9,7 @@ class Champion extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['name', 'slug', 'release_date', 'url', 'image_url', 'location_id'];
+    protected $fillable = ['name','title' , 'slug', 'release_date', 'url', 'image_url', 'location_id'];
 
     public function location()
     {
@@ -18,7 +18,7 @@ class Champion extends Model
 
     public function stories()
     {
-        return $this->belongsToMany(Story::class);
+        return $this->belongsToMany(Story::class)->withTimestamps();
     }
 }
 

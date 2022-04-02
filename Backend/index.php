@@ -37,11 +37,12 @@ class index
 
     public function get_file()
     {
-        $url = $_GET['url'];
-        $sting = "python3 main.py " . $url;
-
-        $ret = shell_exec($sting);
-        echo json_encode(["filePath" => trim($ret)]);
+//        $url = $_GET['url'];
+//        $sting = "python3 main.py " . $url;
+//
+//        $ret = shell_exec($sting);
+//        echo json_encode(["filePath" => trim($ret)]);
+        return null;
     }
 
     public function get_all_files()

@@ -3,6 +3,9 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use \App\Http\Controllers\ChampionController;
+use \App\Http\Controllers\StoryController;
+use \App\Http\Controllers\LocationController;
+use \App\Http\Controllers\HomeController;
 
 /*
 |--------------------------------------------------------------------------
@@ -17,3 +20,9 @@ use \App\Http\Controllers\ChampionController;
 
 
 Route::get('create/latest/champion/files', [ChampionController::class, 'index'])->middleware('api');;
+
+Route::get('champions/all', [ChampionController::class, 'index'])->middleware('api');
+Route::get('champion/{slug}', [ChampionController::class, 'show'])->middleware('api');
+Route::get('story/{text_id}', [StoryController::class, 'show'])->middleware('api');
+Route::get('locations/all', [LocationController::class, 'index'])->middleware('api');
+Route::get('home', [HomeController::class, 'index'])->middleware('api');

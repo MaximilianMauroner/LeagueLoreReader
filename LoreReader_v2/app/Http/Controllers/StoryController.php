@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\StoryRelationResource;
 use App\Models\Story;
 use App\Http\Requests\StoreStoryRequest;
 use App\Http\Requests\UpdateStoryRequest;
@@ -42,12 +43,12 @@ class StoryController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Story  $story
+     * @param string $text_id
      * @return \Illuminate\Http\Response
      */
-    public function show(Story $story)
+    public function show(string $text_id)
     {
-        //
+        return new StoryRelationResource(Story::where('text_id', $text_id)->first());
     }
 
     /**

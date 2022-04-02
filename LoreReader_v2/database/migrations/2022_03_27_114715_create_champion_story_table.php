@@ -14,9 +14,10 @@ class CreateChampionStoryTable extends Migration
     public function up()
     {
         Schema::create('champion_story', function (Blueprint $table) {
-            $table->id();
             $table->foreignId('champion_id')->constrained();
             $table->foreignId('story_id')->constrained();
+            $table->timestamps();
+            $table->primary(['champion_id', 'story_id']);
         });
     }
 

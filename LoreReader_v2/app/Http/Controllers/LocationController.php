@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\LocationResource;
 use App\Models\Location;
 use App\Http\Requests\StoreLocationRequest;
 use App\Http\Requests\UpdateLocationRequest;
@@ -15,7 +16,7 @@ class LocationController extends Controller
      */
     public function index()
     {
-        //
+        return new LocationResource(Location::all());
     }
 
     /**

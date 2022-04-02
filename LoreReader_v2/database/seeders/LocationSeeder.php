@@ -35,7 +35,7 @@ class LocationSeeder extends Seeder
             "slug" => "unaffiliated",
             "description" => "",
             "url" => "",
-            "image_url" => ""
+            "image_url" => "https://lolstatic-a.akamaihd.net/frontpage/apps/prod/universe-map/en_GB/58c9aeb77ffc8ea44a3d723fd2e0ccc964f3444b/assets/assets/images/tiles/terrain_z1.jpg"
         ]);
     }
 }

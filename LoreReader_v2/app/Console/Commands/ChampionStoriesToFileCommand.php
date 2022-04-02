@@ -43,11 +43,11 @@ class ChampionStoriesToFileCommand extends Command
         $champion = Champion::whereHas('stories', function ($stories) {
             $stories->doesntHave('file');
         })->first();
-        if($champion == null){
+        if ($champion == null) {
             return 1;
         }
         $story = $champion->stories()->where('champion_id', $champion->id)->doesntHave('file')->first();
-        if($story == null){
+        if ($story == null) {
             return 1;
         }
         $fp = fopen('story.json', 'w');
@@ -62,8 +62,9 @@ class ChampionStoriesToFileCommand extends Command
                 'story_id' => $story->id
             ]);
         } else {
-            if (file_exists(public_path($story->text_id . ".mp3"))) {
-                unlink(public_path($story->text_id . ".mp3"));
+            $filePath = "../LoreFiles/" . $story->text_id . ".mp3";
+            if (file_exists($filePath)) {
+                unlink($filePath);
             }
         }
         return $ret;
