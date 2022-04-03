@@ -15,6 +15,11 @@ use Illuminate\Http\Request;
 class HomeController extends Controller
 {
 
+    /**
+     * Display the specified resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
     public function index()
     {
         return HomeResource::collection(Champion::inRandomOrder()->paginate(5));

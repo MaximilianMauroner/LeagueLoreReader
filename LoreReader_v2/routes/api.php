@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\SearchController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use \App\Http\Controllers\ChampionController;
@@ -26,4 +27,5 @@ Route::get('champion/{slug}', [ChampionController::class, 'show'])->middleware('
 Route::get('story/{text_id}', [StoryController::class, 'show'])->middleware('api');
 Route::get('locations/all', [LocationController::class, 'index'])->middleware('api');
 Route::get('location/{slug}', [LocationController::class, 'show'])->middleware('api');
+Route::get('search/{search_term}', [SearchController::class, 'show'])->middleware('api');
 Route::get('home', [HomeController::class, 'index'])->middleware('api');

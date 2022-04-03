@@ -33,5 +33,8 @@ export default class API {
     location = (location_slug) => {
         return this.init().get("/location/" + location_slug);
     }
+    search = (search_term) => {
+        return this.init().get("/search/" + search_term);
+    }
 
 }

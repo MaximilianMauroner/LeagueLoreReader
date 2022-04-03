@@ -15,6 +15,10 @@ function classNames(...classes) {
     return classes.filter(Boolean).join(' ')
 }
 
+function getResults(){
+
+}
+
 export default function Navigation() {
     return (
         <Disclosure as="nav" className="bg-gray-900">
