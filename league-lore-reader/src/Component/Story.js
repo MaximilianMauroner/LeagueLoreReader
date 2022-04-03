@@ -3,7 +3,6 @@ import API from "./Helpers/API";
 import Loading from "./ReusableComponents/Loading";
 import ViewEntityBox from "./ReusableComponents/ViewEntityBox";
 import ViewAudioFile from "./ReusableComponents/ViewAudioFile";
-import {Redirect} from "react-router-dom";
 
 class Story extends React.Component {
     state = {
@@ -17,7 +16,6 @@ class Story extends React.Component {
         const text_id = this.props.match.params.text_id
         new API().story(text_id).then((res) => {
             let response = res.data.data
-            console.log(response)
             this.setState({
                 story: response.story,
                 relations: response.related_champions,
@@ -42,7 +40,7 @@ class Story extends React.Component {
         return (
             <div className="bg-gray-800 pt-5 md:pt-2 min-h-screen h-full px-3">
                 <div className={"pb-5 text-white content-center flex flex-col items-center"}>
-                    <article className="relative justify-center w-1/2 md:w-2/3">
+                    <article className="relative justify-center w-1/2 md:w-full">
                         <h1 className="mb-4 text-2xl tracking-tight font-bold text-slate-200 text-center">
                             {this.state.story.title}
                         </h1>
@@ -58,8 +56,8 @@ class Story extends React.Component {
                             <ViewEntityBox
                                 entity={{
                                     image_url: champion.image_url,
-                                    name: champion.title,
-                                    title: champion.name,
+                                    name: champion.name,
+                                    title: champion.title,
                                     link: "/champion/" + champion.slug
                                 }}/>
                         </div>

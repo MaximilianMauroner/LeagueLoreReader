@@ -1,13 +1,17 @@
-import { useState, useEffect } from "react";
+import {useState, useEffect} from "react";
 
 function useAudioPlayer() {
     const [duration, setDuration] = useState();
     const [curTime, setCurTime] = useState();
     const [playing, setPlaying] = useState(false);
     const [clickedTime, setClickedTime] = useState();
+    const [playbackspeed, setPlaybackspeed] = useState(1);
+
 
     useEffect(() => {
         const audio = document.getElementById("audio");
+
+        audio.playbackRate = playbackspeed;
 
         // state setters wrappers
         const setAudioData = () => {
@@ -41,8 +45,10 @@ function useAudioPlayer() {
         curTime,
         duration,
         playing,
+        playbackspeed,
         setPlaying,
-        setClickedTime
+        setClickedTime,
+        setPlaybackspeed
     }
 }
 

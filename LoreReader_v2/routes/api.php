@@ -25,4 +25,5 @@ Route::get('champions/all', [ChampionController::class, 'index'])->middleware('a
 Route::get('champion/{slug}', [ChampionController::class, 'show'])->middleware('api');
 Route::get('story/{text_id}', [StoryController::class, 'show'])->middleware('api');
 Route::get('locations/all', [LocationController::class, 'index'])->middleware('api');
+Route::get('location/{slug}', [LocationController::class, 'show'])->middleware('api');
 Route::get('home', [HomeController::class, 'index'])->middleware('api');

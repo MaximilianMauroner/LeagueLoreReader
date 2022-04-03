@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\LocationRelationResource;
 use App\Http\Resources\LocationResource;
 use App\Models\Location;
 use App\Http\Requests\StoreLocationRequest;
@@ -32,7 +33,7 @@ class LocationController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \App\Http\Requests\StoreLocationRequest  $request
+     * @param \App\Http\Requests\StoreLocationRequest $request
      * @return \Illuminate\Http\Response
      */
     public function store(StoreLocationRequest $request)
@@ -43,18 +44,18 @@ class LocationController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Location  $location
+     * @param string $slug
      * @return \Illuminate\Http\Response
      */
-    public function show(Location $location)
+    public function show(string $slug)
     {
-        //
+        return new LocationRelationResource(Location::where('slug', $slug)->first());
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\Location  $location
+     * @param \App\Models\Location $location
      * @return \Illuminate\Http\Response
      */
     public function edit(Location $location)
@@ -65,8 +66,8 @@ class LocationController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \App\Http\Requests\UpdateLocationRequest  $request
-     * @param  \App\Models\Location  $location
+     * @param \App\Http\Requests\UpdateLocationRequest $request
+     * @param \App\Models\Location $location
      * @return \Illuminate\Http\Response
      */
     public function update(UpdateLocationRequest $request, Location $location)
@@ -77,7 +78,7 @@ class LocationController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Location  $location
+     * @param \App\Models\Location $location
      * @return \Illuminate\Http\Response
      */
     public function destroy(Location $location)

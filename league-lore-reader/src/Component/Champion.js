@@ -2,7 +2,6 @@ import React from "react";
 import Api from "./Helpers/API";
 import Loading from "./ReusableComponents/Loading";
 import ViewEntityBox from "./ReusableComponents/ViewEntityBox";
-import {Redirect} from "react-router-dom";
 
 class Champion extends React.Component {
     state = {

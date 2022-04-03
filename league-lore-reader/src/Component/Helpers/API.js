@@ -25,10 +25,13 @@ export default class API {
         return this.init().get("/home");
     }
     champion = (champion_slug) => {
-        return this.init().get("/champion/"+ champion_slug);
+        return this.init().get("/champion/" + champion_slug);
     }
     story = (text_id) => {
-        return this.init().get("/story/"+ text_id);
+        return this.init().get("/story/" + text_id);
+    }
+    location = (location_slug) => {
+        return this.init().get("/location/" + location_slug);
     }
 
 }

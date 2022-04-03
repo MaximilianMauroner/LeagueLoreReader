@@ -2,20 +2,19 @@ import React from "react";
 import Api from "./Helpers/API";
 import ViewEntityBox from "./ReusableComponents/ViewEntityBox";
 import Loading from "./ReusableComponents/Loading";
-import {Redirect} from "react-router-dom";
+import Pagination from "./ReusableComponents/Pagination";
 
 class Home extends React.Component {
     state = {
         data: [],
         stories: [],
         locations: [],
-        nextPage: '',
+        pagination: '',
         loading: false,
         grid_layout: 'h-auto grid grid-cols-5 xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-1'
     }
 
     componentDidMount() {
-
         this.loadHome();
     }
 
@@ -24,7 +23,7 @@ class Home extends React.Component {
         new Api().home().then((res) => {
             this.setState({
                 data: res.data.data,
-                nextPage: res.data.links.next,
+                pagination: res.data.meta,
                 loading: false
             })
         })
@@ -98,6 +97,7 @@ class Home extends React.Component {
                         )
                     )}
                 </div>
+                <Pagination pagination={this.state.pagination}/>
             </div>
         );
     }

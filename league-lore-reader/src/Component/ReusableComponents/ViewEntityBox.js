@@ -1,4 +1,4 @@
-import {Link, Redirect} from "react-router-dom";
+import {Link} from "react-router-dom";
 
 function ViewEntityBox({entity, loadData}) {
     return (
@@ -10,7 +10,7 @@ function ViewEntityBox({entity, loadData}) {
                         <h1 className="mt-1 text-lg font-semibold text-white">{entity.name ? entity.name : entity.title}</h1>
                     </div>
                     <div className="grid gap-4 col-start-1 col-end-3 row-start-1 ">
-                        <img src={entity.image_url} alt="" className="w-full h-60 object-cover rounded-lg" loading="lazy"/>
+                        <img src={entity.image_url} alt="" className="w-full h-60 object-top object-cover rounded-lg" loading="lazy"/>
                     </div>
                 </div>
             </div>
