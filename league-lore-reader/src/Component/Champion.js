@@ -2,6 +2,7 @@ import React from "react";
 import Api from "./Helpers/API";
 import Loading from "./ReusableComponents/Loading";
 import ViewEntityBox from "./ReusableComponents/ViewEntityBox";
+import {Redirect} from "react-router-dom";
 
 class Champion extends React.Component {
     state = {
@@ -15,7 +16,16 @@ class Champion extends React.Component {
     }
 
     componentDidMount() {
-        const champion_slug = this.props.match.params.slug;
+        this.loadData()
+    }
+
+    loadData = (url = false) => {
+        let champion_slug = "";
+        if (url === false) {
+            champion_slug = this.props.match.params.slug;
+        } else {
+            champion_slug = url.split("/champion/")[1]
+        }
         this.setState({loading: true});
         new Api().champion(champion_slug).then((res) => {
             let response = res.data.data
@@ -32,6 +42,8 @@ class Champion extends React.Component {
     heading = (title) => {
         return (<h1 className="pt-3 pl-5 text-2xl font-semibold text-white">{title}</h1>)
     }
+
+
     displayChampion = () => {
         return (
             <div className={""}>
@@ -68,7 +80,9 @@ class Champion extends React.Component {
                                     name: story.title,
                                     title: this.state.champion.name,
                                     link: "/champion/" + this.state.champion.slug + "/story/" + story.text_id
-                                }}/>
+                                }}
+
+                            />
                         </div>
                     ))}
                 </div>
@@ -80,10 +94,12 @@ class Champion extends React.Component {
                             image_url: this.state.location.image_url,
                             title: this.state.location.title,
                             link: "/region/" + this.state.location.slug
-                        }}/>
+                        }}
+
+                    />
                 </div>
 
-                {this.heading("Related Champions")}
+                {this.state.relations.length > 0 ? this.heading("Related Champions") : null}
                 <div className={this.state.grid_layout}>
                     {this.state.relations.map((champion) => (
                         <div key={champion.id} className={"mx-5"}>
@@ -93,7 +109,9 @@ class Champion extends React.Component {
                                     name: champion.name,
                                     title: champion.title,
                                     link: "/champion/" + champion.slug
-                                }}/>
+                                }}
+                                loadData={this.loadData}
+                            />
                         </div>
                     ))}
                 </div>

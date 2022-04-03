@@ -2,6 +2,7 @@ import React from "react";
 import Api from "./Helpers/API";
 import ViewEntityBox from "./ReusableComponents/ViewEntityBox";
 import Loading from "./ReusableComponents/Loading";
+import {Redirect} from "react-router-dom";
 
 class Home extends React.Component {
     state = {
@@ -33,6 +34,7 @@ class Home extends React.Component {
         return (<h1 className="pt-3 pl-5 text-2xl font-semibold text-white">{title}</h1>)
     }
 
+
     render() {
         if (this.state.loading) {
             return (<Loading/>)
@@ -45,14 +47,13 @@ class Home extends React.Component {
                             entry.champion ?
                                 <div className={"mx-5"}>
                                     <ViewEntityBox
-                                        entity={
-                                            {
-                                                image_url: entry.champion.image_url,
-                                                name: entry.champion.name,
-                                                title: entry.champion.title,
-                                                link: "/champion/" + entry.champion.slug
-                                            }
-                                        }/>
+                                        entity={{
+                                            image_url: entry.champion.image_url,
+                                            name: entry.champion.name,
+                                            title: entry.champion.title,
+                                            link: "/champion/" + entry.champion.slug
+                                        }}
+                                    />
                                 </div>
                                 : null
                         )
@@ -64,14 +65,12 @@ class Home extends React.Component {
                             entry.location ?
                                 <div className={"mx-5"}>
                                     <ViewEntityBox
-                                        entity={
-                                            {
-                                                image_url: entry.location.image_url,
-                                                name: entry.location.title,
-                                                title: entry.location.name,
-                                                link: "/region/" + entry.location.slug
-                                            }
-                                        }/>
+                                        entity={{
+                                            image_url: entry.location.image_url,
+                                            name: entry.location.title,
+                                            title: entry.location.name,
+                                            link: "/region/" + entry.location.slug
+                                        }}/>
                                 </div>
                                 : null
                         )
@@ -85,14 +84,13 @@ class Home extends React.Component {
                                     {entry.stories.map((story) => {
                                         return (
                                             <ViewEntityBox
-                                                entity={
-                                                    {
-                                                        image_url: story.image_url,
-                                                        name: story.title,
-                                                        title: entry.champion.name,
-                                                        link: "/champion/" + entry.champion.slug + "/story/" + story.text_id
-                                                    }
-                                                }/>
+                                                entity={{
+                                                    image_url: story.image_url,
+                                                    name: story.title,
+                                                    title: entry.champion.name,
+                                                    link: "/champion/" + entry.champion.slug + "/story/" + story.text_id
+                                                }}
+                                            />
                                         );
                                     })}
                                 </div>
@@ -103,6 +101,7 @@ class Home extends React.Component {
             </div>
         );
     }
+
 
 }
 

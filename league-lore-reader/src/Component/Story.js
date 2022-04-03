@@ -3,6 +3,7 @@ import API from "./Helpers/API";
 import Loading from "./ReusableComponents/Loading";
 import ViewEntityBox from "./ReusableComponents/ViewEntityBox";
 import ViewAudioFile from "./ReusableComponents/ViewAudioFile";
+import {Redirect} from "react-router-dom";
 
 class Story extends React.Component {
     state = {
@@ -29,12 +30,15 @@ class Story extends React.Component {
     heading = (title) => {
         return (<h1 className="pt-3 pl-5 text-2xl font-semibold text-white">{title}</h1>)
     }
+    changeLink = (link) => {
+        this.setState({redirectTo: link})
+    }
 
     render() {
         if (this.state.loading) {
             return (<Loading/>)
         }
-        console.log(this.state.file)
+
         return (
             <div className="bg-gray-800 pt-5 md:pt-2 min-h-screen h-full px-3">
                 <div className={"pb-5 text-white content-center flex flex-col items-center"}>
