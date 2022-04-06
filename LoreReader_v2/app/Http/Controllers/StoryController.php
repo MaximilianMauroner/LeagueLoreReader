@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\StoryRelationResource;
+use App\Http\Resources\StoryResource;
 use App\Models\Story;
 use App\Http\Requests\StoreStoryRequest;
 use App\Http\Requests\UpdateStoryRequest;
@@ -16,7 +17,7 @@ class StoryController extends Controller
      */
     public function index()
     {
-        //
+        return new StoryResource(Story::query()->orderBy('slug')->paginate());
     }
 
     /**
@@ -32,7 +33,7 @@ class StoryController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \App\Http\Requests\StoreStoryRequest  $request
+     * @param \App\Http\Requests\StoreStoryRequest $request
      * @return \Illuminate\Http\Response
      */
     public function store(StoreStoryRequest $request)
@@ -54,7 +55,7 @@ class StoryController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\Story  $story
+     * @param \App\Models\Story $story
      * @return \Illuminate\Http\Response
      */
     public function edit(Story $story)
@@ -65,8 +66,8 @@ class StoryController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \App\Http\Requests\UpdateStoryRequest  $request
-     * @param  \App\Models\Story  $story
+     * @param \App\Http\Requests\UpdateStoryRequest $request
+     * @param \App\Models\Story $story
      * @return \Illuminate\Http\Response
      */
     public function update(UpdateStoryRequest $request, Story $story)
@@ -77,7 +78,7 @@ class StoryController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Story  $story
+     * @param \App\Models\Story $story
      * @return \Illuminate\Http\Response
      */
     public function destroy(Story $story)

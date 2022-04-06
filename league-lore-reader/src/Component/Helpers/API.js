@@ -37,4 +37,14 @@ export default class API {
         return this.init().get("/search/" + search_term);
     }
 
+    all_champions = () => {
+        return this.init().get("/champions/all");
+    }
+    all_stories = () => {
+        return this.init().get("/stories/all");
+    }
+    all_regions = () => {
+        return this.init().get("/locations/all");
+    }
+
 }

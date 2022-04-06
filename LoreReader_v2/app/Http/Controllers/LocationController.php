@@ -17,7 +17,7 @@ class LocationController extends Controller
      */
     public function index()
     {
-        return new LocationResource(Location::all());
+        return new LocationResource(Location::query()->orderBy('slug')->get());
     }
 
     /**

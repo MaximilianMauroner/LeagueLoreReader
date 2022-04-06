@@ -1,30 +1,53 @@
-/* This example requires Tailwind CSS v2.0+ */
-import {Fragment} from 'react'
+import React, {Fragment, useEffect, useState} from 'react'
 import {Disclosure, Menu, Transition} from '@headlessui/react'
 import {MenuIcon, XIcon} from '@heroicons/react/outline'
 import {Search} from '@mui/icons-material/';
 
 
-const navigation = [
-    {name: 'Champions', href: '/champions', current: true},
-    {name: 'Regions', href: '/regions', current: false},
-    {name: 'Stories', href: '/stories', current: false},
-]
+const Navigation = () => {
+    const [navigation, setNavigation] = useState([
+        {name: 'Home', href: '/home', current: true},
+        {name: 'Champions', href: '/champions/all', current: false},
+        {name: 'Regions', href: '/regions/all', current: false},
+        {name: 'Stories', href: '/stories/all', current: false},
+    ]);
+    const pathname = window.location.href;
 
-function classNames(...classes) {
-    return classes.filter(Boolean).join(' ')
-}
+    useEffect(() => {
+        let temp = navigation
+        for (let i = 0; i < temp.length; i++) {
+            if (pathname === temp[i].href || pathname.includes(temp[i].href)) {
+                temp[i].current = true
+            } else {
+                temp[i].current = false
+            }
+        }
+        setNavigation([...temp])
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
-function getResults(){
+    function classNames(...classes) {
+        return classes.filter(Boolean).join(' ')
+    }
 
-}
+    function changeCurrent(item) {
+        let temp = navigation
+        for (let i = 0; i < temp.length; i++) {
+            if (item.name === temp[i].name) {
+                temp[i].current = true
+            } else {
+                temp[i].current = false
+            }
+        }
+        setNavigation([...temp])
 
-export default function Navigation() {
+    }
+
     return (
         <Disclosure as="nav" className="bg-gray-900">
             {({open}) => (
                 <>
-                    <div className="max-w-7xl mx-auto px-2 sm:px-6 lg:px-8">
+                    <div className="mx-6 px-2 sm:px-6 lg:px-8">
                         <div className="relative flex items-center justify-between h-16">
                             <div className="absolute inset-y-0 left-0 flex items-center hidden sm:block">
                                 {/* Mobile menu button*/}
@@ -90,3 +113,4 @@ export default function Navigation() {
         </Disclosure>
     )
 }
+export default Navigation;

@@ -18,7 +18,7 @@ class ChampionController extends Controller
      */
     public function index()
     {
-        return new ChampionResource(Champion::all()->sortBy('slug'));
+        return new ChampionResource(Champion::query()->orderBy('slug')->get());
     }
 
     /**
