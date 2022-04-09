@@ -1,8 +1,8 @@
 import React from "react";
-import API from "./Helpers/API";
-import Loading from "./ReusableComponents/Loading";
-import ViewEntityBox from "./ReusableComponents/ViewEntityBox";
-import ViewAudioFile from "./ReusableComponents/ViewAudioFile";
+import API from "../Helpers/API";
+import Loading from "../ReusableComponents/Loading";
+import ViewEntityBox from "../ReusableComponents/ViewEntityBox";
+import ViewAudioFile from "../ReusableComponents/ViewAudioFile";
 
 class Story extends React.Component {
     state = {
@@ -36,11 +36,10 @@ class Story extends React.Component {
         if (this.state.loading) {
             return (<Loading/>)
         }
-
         return (
             <div className="bg-gray-800 pt-5 md:pt-2 min-h-screen h-full px-3">
                 <div className={"pb-5 text-white content-center flex flex-col items-center"}>
-                    <article className="relative justify-center w-1/2 md:w-full">
+                    <article className="relative justify-center w-1/2 md:w-full lg:w-2/3">
                         <h1 className="mb-4 text-2xl tracking-tight font-bold text-slate-200 text-center">
                             {this.state.story.title}
                         </h1>

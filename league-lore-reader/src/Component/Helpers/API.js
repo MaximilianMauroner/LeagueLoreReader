@@ -43,8 +43,11 @@ export default class API {
     all_stories = () => {
         return this.init().get("/stories/all");
     }
-    all_regions = () => {
+    all_locations = () => {
         return this.init().get("/locations/all");
+    }
+    all_tts_stories = () => {
+        return this.init().get("/files/all");
     }
 
 }

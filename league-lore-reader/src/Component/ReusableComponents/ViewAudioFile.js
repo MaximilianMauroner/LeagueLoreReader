@@ -29,31 +29,31 @@ const ViewAudioFile = ({story, champions, file}) => {
             <button onClick={() => setPlaying(!playing)} type="button"
                     className="bg-slate-100 text-slate-700 flex-none -my-2 mx-auto rounded-full ring-1 ring-slate-900/5 shadow-md flex items-center justify-center"
                     aria-label="Pause">
-                {!playing ? <PlayCircleFilledWhite class={"h-12"}/> : <PauseCircleOutlineTwoTone class={"h-12"}/>}
+                {!playing ? <PlayCircleFilledWhite class="h-12"/> : <PauseCircleOutlineTwoTone class="h-12"/>}
             </button>)
     }
 
     function skipButton() {
         return (<button type="button" aria-label="Skip 15 seconds" onClick={() => skip()}>
-            <Forward30 class={"my-2 h-8 fill-white"}/>
+            <Forward30 class="my-2 h-8 fill-white"/>
         </button>)
     }
 
     function rewindButton() {
         return (<button type="button" aria-label="Rewind 10 seconds" onClick={() => rewind()}>
-            <Replay30 class={"my-2 h-8 fill-white"}/>
+            <Replay30 class="my-2 h-8 fill-white"/>
         </button>)
     }
 
     function endButton() {
         return (<button type="button" className="md:hidden" aria-label="Next" onClick={() => setClickedTime(duration)}>
-            <SkipNext class={"my-2 h-8 fill-white"}/>
+            <SkipNext class="my-2 h-8 fill-white"/>
         </button>)
     }
 
     function startButton() {
         return (<button type="button" className="md:hidden" aria-label="Start" onClick={() => setClickedTime(0.1)}>
-            <SkipPrevious class={"my-2 h-8 fill-white"}/>
+            <SkipPrevious class="my-2 h-8 fill-white"/>
         </button>)
     }
 

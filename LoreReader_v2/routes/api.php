@@ -20,11 +20,11 @@ use \App\Http\Controllers\HomeController;
 */
 
 
-Route::get('create/latest/champion/files', [ChampionController::class, 'index'])->middleware('api');;
-
+Route::get('create/latest/champion/files', [ChampionController::class, 'index'])->middleware('api');
 Route::get('champions/all', [ChampionController::class, 'index'])->middleware('api');
 Route::get('stories/all', [StoryController::class, 'index'])->middleware('api');
 Route::get('locations/all', [LocationController::class, 'index'])->middleware('api');
+Route::get('files/all', [StoryController::class, 'files'])->middleware('api');
 Route::get('champion/{slug}', [ChampionController::class, 'show'])->middleware('api');
 Route::get('story/{text_id}', [StoryController::class, 'show'])->middleware('api');
 Route::get('location/{slug}', [LocationController::class, 'show'])->middleware('api');

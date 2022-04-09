@@ -1,7 +1,7 @@
 import React from "react";
-import Api from "./Helpers/API";
-import Loading from "./ReusableComponents/Loading";
-import ViewEntityBox from "./ReusableComponents/ViewEntityBox";
+import Api from "../Helpers/API";
+import Loading from "../ReusableComponents/Loading";
+import ViewEntityBox from "../ReusableComponents/ViewEntityBox";
 
 class Champion extends React.Component {
     state = {
@@ -78,7 +78,7 @@ class Champion extends React.Component {
                                     image_url: story.image_url,
                                     name: story.title,
                                     title: this.state.champion.name,
-                                    link: "/champion/" + this.state.champion.slug + "/story/" + story.text_id
+                                    link: "/story/" + story.text_id
                                 }}
 
                             />

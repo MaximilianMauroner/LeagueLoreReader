@@ -4,9 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\StoryRelationResource;
 use App\Http\Resources\StoryResource;
+use App\Models\File;
 use App\Models\Story;
 use App\Http\Requests\StoreStoryRequest;
 use App\Http\Requests\UpdateStoryRequest;
+use Symfony\Component\VarDumper\VarDumper;
 
 class StoryController extends Controller
 {
@@ -17,7 +19,16 @@ class StoryController extends Controller
      */
     public function index()
     {
-        return new StoryResource(Story::query()->orderBy('slug')->paginate());
+        return new StoryResource(Story::query()->orderBy('text_id')->paginate(15, ['title', 'text_id', 'image_url']));
+    }
+
+    public function files()
+    {
+
+        $s = Story::join('files', 'files.story_id', '=', 'stories.id')
+            ->orderBy('files.created_at', 'desc')
+            ->paginate(15, ['stories.*']);
+        return StoryRelationResource::collection($s);
     }
 
     /**

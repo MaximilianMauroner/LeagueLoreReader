@@ -44,7 +44,7 @@ class Home extends React.Component {
                 <div className={this.state.grid_layout}>
                     {this.state.data.map((entry) => (
                             entry.champion ?
-                                <div className={"mx-5"}>
+                                <div  key={entry.champion.slug + Math.random()}  className={"mx-5"}>
                                     <ViewEntityBox
                                         entity={{
                                             image_url: entry.champion.image_url,
@@ -62,7 +62,7 @@ class Home extends React.Component {
                 <div className={this.state.grid_layout}>
                     {this.state.data.map((entry) => (
                             entry.location ?
-                                <div className={"mx-5"}>
+                                <div  key={entry.location.slug + Math.random()}  className={"mx-5"}>
                                     <ViewEntityBox
                                         entity={{
                                             image_url: entry.location.image_url,
@@ -79,15 +79,16 @@ class Home extends React.Component {
                 <div className={this.state.grid_layout}>
                     {this.state.data.map((entry) => (
                             entry.stories.length > 0 ?
-                                <div className={"mx-5 flex flex-col"}>
+                                <div key={entry.stories[0].text_id + Math.random()} className={"mx-5 flex flex-col"}>
                                     {entry.stories.map((story) => {
                                         return (
                                             <ViewEntityBox
+                                                key={story.text_id + Math.random()}
                                                 entity={{
                                                     image_url: story.image_url,
                                                     name: story.title,
                                                     title: entry.champion.name,
-                                                    link: "/champion/" + entry.champion.slug + "/story/" + story.text_id
+                                                    link: "/story/" + story.text_id
                                                 }}
                                             />
                                         );
