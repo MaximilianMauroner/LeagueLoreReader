@@ -86,9 +86,9 @@ const Navigation = () => {
         <Disclosure as="nav" className="bg-gray-900">
             {({open}) => (
                 <>
-                    <div className="mx-6 px-8 sm:px-2">
+                    <div className="mx-6 sm:mx-0 px-8 sm:px-2">
                         <div className="relative flex items-center justify-between h-16">
-                            <div className="absolute lg:mt-3 inset-y-0 left-0 flex items-center hidden lg:block">
+                            <div className="absolute sm:relative lg:mt-3 sm:mt-0 inset-y-0 left-0 flex items-center hidden lg:block">
                                 {/* Mobile menu button*/}
                                 <Disclosure.Button className="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-white hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white">
                                     <span className="sr-only">Open main menu</span>
@@ -117,19 +117,22 @@ const Navigation = () => {
                                         ))}
                                     </div>
                                 </div>
-                                <div className="absolute right-0 flex items-center static inset-auto ml-6 pr-0">
-                                    <div className={"relative"}>
+                                <div className="absolute sm:relative right-0 flex items-center static inset-auto ml-6 sm:ml-0 pr-0 sm:w-full">
+                                    <div className={"relative w-full"}>
                                         <div className="relative mx-auto text-gray-400">
                                             <button type="submit" className="absolute left-0 top-0 mt-1 ml-1">
                                                 <Search/>
                                             </button>
-                                            <input className="bg-gray-700 w-64 sm:w-48 h-9 p-2 pl-8 rounded-lg text-sm focus:outline-none"
+                                            <input className="bg-gray-700 w-64 sm:w-full h-9 p-2 pl-8 rounded-lg text-sm focus:outline-none"
                                                    type="text" name="search" placeholder="Search" onChange={(e) => searchTerm(e.target.value)}/>
                                         </div>
                                         <div className={"absolute z-50 w-full"}>
-                                            <div className={"bg-slate-700 border border-gray-800 w-full rounded-xl shadow-2xl"}>
-                                                {displaySearchResults()}
-                                            </div>
+                                            {searchStoryResult.length > 0 || searchChampionResult.length > 0 || searchLocationResult.length > 0 ?
+                                                <div className={"bg-slate-700 border border-gray-800 w-full rounded-xl shadow-2xl"}>
+                                                    {displaySearchResults()}
+                                                </div> :
+                                                null
+                                            }
                                         </div>
                                     </div>
                                 </div>
