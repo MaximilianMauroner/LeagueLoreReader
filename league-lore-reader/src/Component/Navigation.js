@@ -11,7 +11,7 @@ const Navigation = () => {
         {name: 'Champions', href: '/champions/all', current: false},
         {name: 'Regions', href: '/regions/all', current: false},
         {name: 'Stories', href: '/stories/all', current: false},
-        {name: 'Text-to-Speech Stories', href: '/tts/all', current: false},
+        // {name: 'Text-to-Speech Stories', href: '/tts/all', current: false},
     ])
     const [searchLocationResult, setSearchLocationResult] = useState([])
     const [searchStoryResult, setSearchStoryResult] = useState([])

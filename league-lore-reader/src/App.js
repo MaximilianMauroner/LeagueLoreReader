@@ -35,7 +35,7 @@ class App extends Component {
                                 <Route path={"/champions/all"} component={AllChampions}/>
                                 <Route path={"/stories/all"} component={AllStories}/>
                                 <Route path={"/regions/all"} component={AllLocations}/>
-                                <Route path={"/tts/all"} component={AllTextToSpeechStories}/>
+                                {/*<Route path={"/tts/all"} component={AllTextToSpeechStories}/>*/}
                                 <Route path={"/story/:text_id"} component={Story}/>
                                 <Route path={"/champion/:slug"} component={Champion}/>
                                 <Route path={"/region/:slug"} component={Location}/>

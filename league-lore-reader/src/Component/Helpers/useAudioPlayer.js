@@ -13,6 +13,7 @@ function useAudioPlayer() {
 
         audio.playbackRate = playbackspeed;
 
+
         // state setters wrappers
         const setAudioData = () => {
             setDuration(audio.duration);

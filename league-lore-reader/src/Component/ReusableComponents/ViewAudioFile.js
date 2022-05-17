@@ -4,7 +4,14 @@ import {ChevronDownIcon} from '@heroicons/react/solid'
 import useAudioPlayer from "../Helpers/useAudioPlayer";
 import moment from "moment";
 import momentDurationFormatSetup from "moment-duration-format";
-import {Replay30, Forward30, PlayCircleFilledWhite, PauseCircleOutlineTwoTone, SkipPrevious, SkipNext} from '@mui/icons-material/';
+import {
+    Replay30,
+    Forward30,
+    PlayCircleFilledWhite,
+    PauseCircleOutlineTwoTone,
+    SkipPrevious,
+    SkipNext
+} from '@mui/icons-material/';
 import {Link} from "react-router-dom";
 
 const ViewAudioFile = ({story, champions, file}) => {
@@ -25,6 +32,10 @@ const ViewAudioFile = ({story, champions, file}) => {
     }
 
     function playPauseButton() {
+        if (curTime >= (duration - 0.1) && playing === true) {
+            setClickedTime(0.1);
+            setPlaying(!playing);
+        }
         return (
             <button onClick={() => setPlaying(!playing)} type="button"
                     className="bg-slate-100 text-slate-700 flex-none -my-2 mx-auto rounded-full ring-1 ring-slate-900/5 shadow-md flex items-center justify-center"
@@ -124,58 +135,61 @@ const ViewAudioFile = ({story, champions, file}) => {
         });
     }
 
-    return (<div className={"my-3"}>
-        <div className="bg-slate-800 border-slate-500 border-b rounded-t-xl p-4 pb-6 space-y-6">
-            <div className="flex flex-row md:flex-col items-center space-x-4">
-                <img src={story.image_url} alt={champions.map((champion) => champion.name + " ")} className="flex-none h-40 max-w-sm md:w-full rounded-lg bg-slate-100 md:object-cover"/>
-                <div className="min-w-0 flex-auto space-y-1 font-semibold">
-                    <h2 className="text-slate-400 text-sm leading-6 truncate">
-                        {champions.map((champion, index) => {
-                            let connectionString = index < champions.length - 1 ? ", " : " ";
-                            return (
-                                <Link key={champion.id} to={"/champion/" + champion.slug}>
-                                    <span className={"hover:underline"}>{champion.name}</span>
-                                    {connectionString}
-                                </Link>
-                            )
-                        })}
-                    </h2>
-                    <p className="text-slate-50 text-lg">
-                        {story.title}
-                    </p>
-                </div>
-            </div>
-            <div className="space-y-2">
-                <div className="relative">
-                    <div id={"bar__progress"} className="bg-slate-700 rounded-full overflow-hidden" onMouseDown={e => handleTimeDrag(e)}>
-                        <div className="bg-cyan-400 w-full h-2" style={{width: widthCalculator()}} role="progressbar" aria-label="music progress" aria-valuenow={Math.floor(curTime)}
-                             aria-valuemin="0" aria-valuemax={Math.floor(duration)}/>
+    return (
+        <div className={"my-3"}>
+            <div className="bg-slate-800 border-slate-500 border-b rounded-t-xl p-4 pb-6 space-y-6">
+                <div className="flex flex-row md:flex-col items-center space-x-4">
+                    <img src={story.image_url} alt={champions.map((champion) => champion.name + " ")}
+                         className="flex-none h-40 max-w-sm md:w-full rounded-lg bg-slate-100 md:object-cover"/>
+                    <div className="min-w-0 flex-auto space-y-1 font-semibold">
+                        <h2 className="text-slate-400 text-sm leading-6 truncate">
+                            {champions.map((champion, index) => {
+                                let connectionString = index < champions.length - 1 ? ", " : " ";
+                                return (
+                                    <Link key={champion.id} to={"/champion/" + champion.slug}>
+                                        <span className={"hover:underline"}>{champion.name}</span>
+                                        {connectionString}
+                                    </Link>
+                                )
+                            })}
+                        </h2>
+                        <p className="text-slate-50 text-lg">
+                            {story.title}
+                        </p>
                     </div>
                 </div>
-                <audio id="audio">
-                    <source src={process.env.REACT_APP_MEDIA_URL + "/" + file.filename}/>
-                    Your browser does not support the <code>audio</code> element.
-                </audio>
-                <div className="flex justify-between text-sm leading-6 font-medium tabular-nums">
-                    <div className="text-slate-100">{formatDuration(curTime)}</div>
-                    <div className="text-slate-400">{formatDuration(duration)}</div>
+                <div className="space-y-2">
+                    <div className="relative">
+                        <div id={"bar__progress"} className="bg-slate-700 rounded-full overflow-hidden"
+                             onMouseDown={e => handleTimeDrag(e)}>
+                            <div className="bg-cyan-400 w-full h-2" style={{width: widthCalculator()}}
+                                 role="progressbar" aria-label="music progress" aria-valuenow={Math.floor(curTime)}
+                                 aria-valuemin="0" aria-valuemax={Math.floor(duration)}/>
+                        </div>
+                    </div>
+                    <audio id="audio">
+                        <source src={process.env.REACT_APP_MEDIA_URL + "/" + file.filename}/>
+                        Your browser does not support the <code>audio</code> element.
+                    </audio>
+                    <div className="flex justify-between text-sm leading-6 font-medium tabular-nums">
+                        <div className="text-slate-100">{formatDuration(curTime)}</div>
+                        <div className="text-slate-400">{formatDuration(duration)}</div>
+                    </div>
+                </div>
+            </div>
+            <div className="bg-slate-600 text-slate-200 rounded-b-xl flex items-center">
+                <div className="flex-auto flex items-center justify-evenly">
+                    {startButton()}
+                    {rewindButton()}
+                </div>
+                {playPauseButton()}
+                <div className="flex-auto flex items-center justify-evenly">
+                    {skipButton()}
+                    {endButton()}
+                    {speedButton()}
                 </div>
             </div>
         </div>
-        <div className="bg-slate-600 text-slate-200 rounded-b-xl flex items-center">
-            <div className="flex-auto flex items-center justify-evenly">
-                {startButton()}
-                {rewindButton()}
-            </div>
-
-            {playPauseButton()}
-
-            <div className="flex-auto flex items-center justify-evenly">
-                {skipButton()}
-                {endButton()}
-                {speedButton()}
-            </div>
-        </div>
-    </div>)
+    )
 }
 export default ViewAudioFile
