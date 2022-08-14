@@ -14,9 +14,9 @@ const Navigation: React.FC<{}> = () => {
     const router = useRouter();
     const [navigation, setNavigation] = useState([
         {name: 'Home', href: '/home', current: true},
-        {name: 'Champions', href: '/champions/all', current: false},
-        {name: 'Regions', href: '/regions/all', current: false},
-        {name: 'Stories', href: '/stories/all', current: false},
+        {name: 'Champions', href: '/champion/', current: false},
+        {name: 'Factions', href: '/faction/', current: false},
+        {name: 'Stories', href: '/story/', current: false},
         // {name: 'Text-to-Speech Stories', href: '/tts/all', current: false},
     ])
     useEffect(() => {
@@ -28,7 +28,7 @@ const Navigation: React.FC<{}> = () => {
         }
         setNavigation([...temp])
 
-    }, [router, navigation]);
+    }, [router]);
 
     return (
         <Disclosure as="nav" className="bg-gray-900">

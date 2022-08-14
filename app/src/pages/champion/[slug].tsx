@@ -14,6 +14,7 @@ import {z} from "zod";
 import {Champion} from "@prisma/client";
 import Image from "next/image";
 import Navigation from "../../components/navigation";
+import Heading from "../../components/heading";
 
 
 const ChampionPage: NextPage = () => {
@@ -29,7 +30,6 @@ const ChampionPage: NextPage = () => {
     if (isLoading || championData == null) {
         return (<Loading/>)
     }
-
     return (
         <>
             <Navigation/>
@@ -39,7 +39,7 @@ const ChampionPage: NextPage = () => {
                 </div>
                 <Heading title={"Stories"}/>
                 <div className={grid_layout}>
-                    {championData.ChampionStories.map((story) => (
+                    {championData.championStories.map((story) => (
                         <div key={story.storyId} className={"mx-5"}>
                             <ViewEntityBox
                                 entity={{
@@ -61,14 +61,13 @@ const ChampionPage: NextPage = () => {
                                 entity={{
                                     imageUrl: championData.faction.imageUrl,
                                     title: championData.faction.title,
-                                    link: "/region/" + championData.faction.slug
+                                    link: "/faction/" + championData.faction.slug
                                 }}
                             />
                         </div>
                     </>
                     : null
                 }
-
                 {relatedChampions?.length ?
                     <>
                         <Heading title={"Related Champions"}/>
@@ -92,10 +91,6 @@ const ChampionPage: NextPage = () => {
     )
 
 }
-
-const Heading: React.FC<{ title: string }> = ({title}) => {
-    return (<h1 className="pt-3 pl-5 text-2xl font-semibold text-white">{title}</h1>)
-}
 const DisplayChampion: React.FC<{ champion: Champion }> = ({champion}) => {
     return (
         <div className="container mx-auto py-9 md:py-2">
@@ -103,15 +98,17 @@ const DisplayChampion: React.FC<{ champion: Champion }> = ({champion}) => {
                 <div className="flex flex-col items-strech justify-between py-6 px-6">
                     <h1 className={"text-center pt-3 text-4xl text-white"}>{champion.name}</h1>
                     <h1 className={"text-center pb-3 text-3xl text-white"}>{champion.title}</h1>
-                    <Image
-                        src={champion.imageUrl}
-                        layout="responsive"
-                        width={1000}
-                        height={500}
-                        className={"object-cover"}
-                        alt={champion.name}
-                        priority={true}
-                    />
+                    <div>
+                        <Image
+                            src={champion.imageUrl}
+                            layout="responsive"
+                            width={1000}
+                            height={500}
+                            className={"object-cover"}
+                            alt={champion.name}
+                            priority={true}
+                        />
+                    </div>
                     <div
                         className={"text-center py-3 text-xl text-white"}>{"Release Date: " + champion.releaseDate}</div>
                 </div>
@@ -129,7 +126,6 @@ export async function getStaticProps(context: GetStaticPropsContext<{ slug: stri
 
     const slug = context.params?.slug as string;
 
-    // prefetch `post.byId`
     await ssg.fetchQuery('champion.bySlug', {
         slug,
     });

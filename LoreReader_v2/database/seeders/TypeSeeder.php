@@ -15,7 +15,7 @@ class TypeSeeder extends Seeder
     public function run()
     {
         $types = [
-            ["name" => "Champion Story", "slug" => "champion_story"], ["name" => "Colour Story", "slug" => "colour_story"]
+            ["name" => "Id Story", "slug" => "champion_story"], ["name" => "Colour Story", "slug" => "colour_story"]
         ];
 
         foreach ($types as $type) {

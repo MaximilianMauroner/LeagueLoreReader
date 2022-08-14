@@ -67,7 +67,7 @@ model Faction {
   description String     @db.Text
   url         String
   imageUrl    String
-  Id          Champion[]
+  champions   Champion[]
 }
 
 model Champion {
@@ -81,7 +81,7 @@ model Champion {
   imageUrl    String
 
   faction         Faction?          @relation(fields: [factionId], references: [id], onDelete: Cascade)
-  ChampionStories ChampionStories[]
+  championStories ChampionStories[]
 }
 
 model Story {
@@ -91,8 +91,8 @@ model Story {
   imageUrl        String
   htmlStory       String            @db.LongText
   type            StoryType
-  File            File[]
-  ChampionStories ChampionStories[]
+  files           File[]
+  championStories ChampionStories[]
 }
 
 model ChampionStories {

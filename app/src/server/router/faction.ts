@@ -57,4 +57,17 @@ export const factionRouter = createRouter()
             console.log(resData)
             return resData
         },
+    })
+    .query("bySlug", {
+        input: z.object({
+            slug: z.string().min(1),
+        }),
+        async resolve({ctx, input}) {
+            return await ctx.prisma.faction.findFirst({
+                where: {slug: input.slug},
+                include: {
+                    champions: true,
+                }
+            })
+        }
     });

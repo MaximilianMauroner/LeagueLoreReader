@@ -1,7 +1,7 @@
 import {Context, createRouter} from "./context";
 import {env} from "../../env/server.mjs";
 import {Champion, StoryType, Story} from "@prisma/client";
-import {map, z} from "zod";
+import {z} from "zod";
 
 
 export const championRouter = createRouter()
@@ -24,7 +24,7 @@ export const championRouter = createRouter()
                     where: {slug: input.slug},
                     include: {
                         faction: true,
-                        ChampionStories: {
+                        championStories: {
                             include: {
                                 story: true,
                             }
@@ -32,12 +32,12 @@ export const championRouter = createRouter()
                     }
                 })
                 let stories: number[] = []
-                champion?.ChampionStories.forEach((v) => {
+                champion?.championStories.forEach((v) => {
                     stories.push(v.storyId)
                 })
                 const relatedChamps = await ctx.prisma.champion.findMany({
                     where: {
-                        ChampionStories: {
+                        championStories: {
                             some: {
                                 storyId: {in: stories},
                                 NOT: {championId: champion!.id}
@@ -53,7 +53,7 @@ export const championRouter = createRouter()
 
 async function upsertInitialData(ctx: Context, json: any) {
     for (const champion of json.champions) {
-        const faction = await ctx.prisma.faction.findFirst({select: {id: true}, where: {slug: champion.slug}})
+        const faction = await ctx.prisma.faction.findFirst({select: {id: true}, where: {slug: champion['associated-faction-slug']}})
         await ctx.prisma.champion.upsert({
             where: {
                 slug: champion.slug,

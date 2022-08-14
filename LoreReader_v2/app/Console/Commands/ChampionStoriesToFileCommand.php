@@ -21,7 +21,7 @@ class ChampionStoriesToFileCommand extends Command
      *
      * @var string
      */
-    protected $description = 'Create a files for each Champion Stories using the last champion sorted alphabetically';
+    protected $description = 'Create a files for each Id Stories using the last champion sorted alphabetically';
 
     /**
      * Create a new command instance.

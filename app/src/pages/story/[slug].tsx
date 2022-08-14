@@ -2,16 +2,67 @@ import React from "react";
 import Loading from "../../components/loading";
 import ViewEntityBox from "../../components/view-entity-box";
 import ViewAudioFile from "../../components/view-audio-file";
-import {NextPage} from "next";
+import {GetStaticPaths, GetStaticPropsContext, NextPage} from "next";
 import {useRouter} from "next/router";
+import {createSSGHelpers} from "@trpc/react/ssg";
+import {appRouter} from "../../server/router";
+import {createContext} from "../../server/router/context";
+import superjson from "superjson";
+import {prisma} from "../../server/db/client";
+import {z} from "zod";
+import {trpc} from "../../utils/trpc";
 
 export const StoryPage: NextPage = () => {
+    const grid_layout = 'h-auto grid md:grid-cols-2 xl:grid-cols-3 grid-cols-1 mx-3'
     const router = useRouter()
     let {slug} = router.query
-    console.log(slug)
+    const slugValidator = z.string()
+    slug = slugValidator.parse(slug)
+    const {data: story, isLoading} = trpc.useQuery(['story.bySlug', {slug}]);
+
+    if (isLoading || story == null) {
+        return (<Loading/>)
+    }
+    console.log(story)
     return <>{slug}</>
 }
 export default StoryPage;
+
+export async function getStaticProps(context: GetStaticPropsContext<{ slug: string }>,) {
+    const ssg = createSSGHelpers({
+        router: appRouter,
+        ctx: await createContext(),
+        transformer: superjson,
+    });
+
+    const slug = context.params?.slug as string;
+
+    await ssg.fetchQuery('story.bySlug', {
+        slug,
+    });
+
+    return {
+        props: {
+            trpcState: ssg.dehydrate(),
+            slug,
+        },
+        revalidate: 1,
+    };
+}
+
+export const getStaticPaths: GetStaticPaths = async () => {
+    const stories = await prisma.story.findMany({select: {textId: true}});
+    return {
+        paths: stories.map((story) => ({
+            params: {
+                slug: story.textId,
+            },
+        })),
+        // https://nextjs.org/docs/basic-features/data-fetching#fallback-blocking
+        fallback: 'blocking',
+    };
+}
+
 //
 // class Slug extends React.Component {
 //     state = {
