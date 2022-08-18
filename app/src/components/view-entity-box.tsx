@@ -36,7 +36,6 @@ const ViewEntityBox: React.FC<{ entity: z.infer<typeof entityValidator> }> = ({e
             </a>
         </Link>
     )
-
 }
 
 export default ViewEntityBox;

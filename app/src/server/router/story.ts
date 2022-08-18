@@ -20,4 +20,22 @@ export const storyRouter = createRouter()
                 }
             })
         }
-    });
+    })
+    .query("getAll", {
+        async resolve({ctx}) {
+            return await ctx.prisma.story.findMany({
+                orderBy: [
+                    {title: 'asc',},
+                    {textId: 'asc',}
+                ],
+                include: {
+                    championStories: {
+                        include: {
+                            champion: true,
+                        }
+                    }
+                }
+            })
+        }
+    })
+;

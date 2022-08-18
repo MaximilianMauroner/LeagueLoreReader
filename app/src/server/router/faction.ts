@@ -70,4 +70,13 @@ export const factionRouter = createRouter()
                 }
             })
         }
+    })
+    .query("getAll", {
+        async resolve({ctx}) {
+            return await ctx.prisma.faction.findMany({
+                orderBy: [
+                    {slug: 'asc',},
+                ],
+            })
+        }
     });

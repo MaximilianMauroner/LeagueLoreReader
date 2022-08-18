@@ -25,7 +25,7 @@ export const FactionPage: NextPage = () => {
     if (isLoading || faction == null) {
         return (<Loading/>)
     }
-    return <>
+    return (<>
         <div className="bg-gray-800 pt-5 md:pt-2 min-h-screen h-full px-3">
             <DisplayFaction faction={faction}/>
             <Heading title={"Champions"}/>
@@ -44,8 +44,7 @@ export const FactionPage: NextPage = () => {
                 ))}
             </div>
         </div>
-
-    </>
+    </>)
 }
 
 export const DisplayFaction: React.FC<{ faction: Faction & { champions: Champion[] } }> = ({faction}) => {
