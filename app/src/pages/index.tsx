@@ -10,7 +10,7 @@ import {appRouter} from "../server/router";
 import {createContext} from "../server/router/context";
 import superjson from "superjson";
 import ViewEntityBox from "../components/view-entity-box";
-import React, {ReactElement} from "react";
+import React, {ReactElement, useEffect, useState} from "react";
 import Loading from "../components/loading";
 import {array} from "zod";
 import {Champion, Faction, Story, ChampionStories} from "@prisma/client";
@@ -83,6 +83,7 @@ function randomizeArray(combinedData: ReactElement[]) {
 const Home: NextPage = () => {
     const grid_layout = 'h-auto grid md:grid-cols-2 xl:grid-cols-3 grid-cols-1 mx-3'
     const combinedData: ReactElement[] = [];
+    const [shuffled,setShuffled]= useState<ReactElement[]>([]);
     const {data: factions, isLoading: factionLoading} = trpc.useQuery(['faction.getAll']);
     const {data: champions, isLoading: championLoading} = trpc.useQuery(['champion.getAll']);
     const {data: stories, isLoading: storyLoading} = trpc.useQuery(['story.getAll']);
@@ -91,9 +92,27 @@ const Home: NextPage = () => {
     if (factionLoading || championLoading || storyLoading || !factions || !champions || !stories) {
         return <Loading/>
     }
+
     prepareFactionData(factions, combinedData);
     prepareStoryData(stories, combinedData);
     prepareChampionData(champions, combinedData);
+
+    useEffect(() => {
+        const shuffle = (array: ReactElement[]) => {
+            for (var i = array.length - 1; i > 0; i--) {
+                var j = Math.floor(Math.random() * (i + 1));
+                var temp = array[i];
+                // @ts-ignore
+                array[i] = array[j];
+                // @ts-ignore
+                array[j] = temp;
+            }
+        };
+        setShuffled(() => {
+            shuffle(combinedData);
+            return combinedData;
+        })
+    }, [])
     return (
         <>
             <Head>
@@ -102,10 +121,10 @@ const Home: NextPage = () => {
                 <link rel="icon" href="/favicon.ico"/>
             </Head>
 
+            <Navigation/>
             <main className="bg-gray-800 pt-5 md:pt-2 min-h-screen h-full px-3">
-                <Navigation/>
                 <div className={grid_layout}>
-                    {combinedData}
+                    {shuffled}
                 </div>
             </main>
         </>

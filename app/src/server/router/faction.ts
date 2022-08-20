@@ -53,8 +53,6 @@ export const factionRouter = createRouter()
             const jsonData = await data.json()
             const resData = await upsertInitialData(ctx, jsonData)
             await updateDescriptionAndRelations(ctx, resData);
-
-            console.log(resData)
             return resData
         },
     })

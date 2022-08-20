@@ -9,6 +9,7 @@ import Heading from "../../components/heading";
 import ViewEntityBox from "../../components/view-entity-box";
 import React from "react";
 import {DisplayFaction} from "../faction/[slug]";
+import Navigation from "../../components/navigation";
 
 
 const AllStories: NextPage = () => {
@@ -16,6 +17,7 @@ const AllStories: NextPage = () => {
     const {data: stories, isLoading} = trpc.useQuery(['story.getAll']);
     return (
         <>
+            <Navigation/>
             <div className="bg-gray-800 pt-5 md:pt-2 min-h-screen h-full px-3">
                 <div className={grid_layout}>
                     {stories?.map((story) => (

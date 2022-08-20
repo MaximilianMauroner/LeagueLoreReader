@@ -6,6 +6,7 @@ import {createSSGHelpers} from "@trpc/react/ssg";
 import {appRouter} from "../../server/router";
 import {createContext} from "../../server/router/context";
 import superjson from "superjson";
+import Navigation from "../../components/navigation";
 
 
 const AllChampions: NextPage = () => {
@@ -13,6 +14,7 @@ const AllChampions: NextPage = () => {
     const {data: champions, isLoading} = trpc.useQuery(['champion.getAll']);
     return (
         <>
+            <Navigation/>
             <div className="bg-gray-800 pt-5 md:pt-2 min-h-screen h-full px-3">
                 <div className={grid_layout}>
                     {champions?.map((champion) => (

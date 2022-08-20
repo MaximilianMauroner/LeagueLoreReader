@@ -6,12 +6,14 @@ import superjson from "superjson";
 import {trpc} from "../../utils/trpc";
 import ViewEntityBox from "../../components/view-entity-box";
 import React from "react";
+import Navigation from "../../components/navigation";
 
 
 const AllFactions: NextPage = () => {
     const grid_layout = 'h-auto grid md:grid-cols-2 xl:grid-cols-3 grid-cols-1 mx-3'
     const {data: factions, isLoading} = trpc.useQuery(['faction.getAll']);
-    return (
+    return <>
+        <Navigation/>
         <div className="bg-gray-800 pt-5 md:pt-2 min-h-screen h-full px-3">
             <div className={grid_layout}>
                 {factions?.map((faction) => (
@@ -27,7 +29,7 @@ const AllFactions: NextPage = () => {
                 ))}
             </div>
         </div>
-    )
+    </>
 }
 export default AllFactions;
 

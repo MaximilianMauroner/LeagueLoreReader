@@ -13,6 +13,7 @@ import {z} from "zod";
 import {trpc} from "../../utils/trpc";
 import Heading from "../../components/heading";
 import Image from "next/image";
+import Navigation from "../../components/navigation";
 
 export const FactionPage: NextPage = () => {
     const grid_layout = 'h-auto grid md:grid-cols-2 xl:grid-cols-3 grid-cols-1 mx-3'
@@ -25,7 +26,8 @@ export const FactionPage: NextPage = () => {
     if (isLoading || faction == null) {
         return (<Loading/>)
     }
-    return (<>
+    return <>
+        <Navigation/>
         <div className="bg-gray-800 pt-5 md:pt-2 min-h-screen h-full px-3">
             <DisplayFaction faction={faction}/>
             <Heading title={"Champions"}/>
@@ -44,7 +46,7 @@ export const FactionPage: NextPage = () => {
                 ))}
             </div>
         </div>
-    </>)
+    </>
 }
 
 export const DisplayFaction: React.FC<{ faction: Faction & { champions: Champion[] } }> = ({faction}) => {

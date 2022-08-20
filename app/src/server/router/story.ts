@@ -16,7 +16,8 @@ export const storyRouter = createRouter()
                         include: {
                             champion: true,
                         }
-                    }
+                    },
+                    file: true,
                 }
             })
         }

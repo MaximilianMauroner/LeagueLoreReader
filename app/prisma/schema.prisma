@@ -91,7 +91,7 @@ model Story {
   imageUrl        String
   htmlStory       String            @db.LongText
   type            StoryType
-  files           File[]
+  file            File?
   championStories ChampionStories[]
 }
 
@@ -108,8 +108,8 @@ model ChampionStories {
 model File {
   id       Int    @id @default(autoincrement())
   savePath String
-  filename String
-  storyId  Int
+  fileName String
+  storyId  Int    @unique
 
   story Story @relation(fields: [storyId], references: [id], onDelete: Cascade)
 }
