@@ -13,6 +13,7 @@ import {z} from "zod";
 import {trpc} from "../../utils/trpc";
 import Heading from "../../components/heading";
 import Navigation from "../../components/navigation";
+import {env} from "../../env/server.mjs";
 
 export const StoryPage: NextPage = () => {
     const grid_layout = 'h-auto grid md:grid-cols-2 xl:grid-cols-3 grid-cols-1 mx-3'
@@ -50,7 +51,9 @@ export const StoryPage: NextPage = () => {
                                 name: cs.champion.name,
                                 title: cs.champion.title!,
                                 link: "/champion/" + cs.champion.slug
-                            }}/>
+                            }}
+                            
+                        />
                     </div>
                 ))}
             </div>
@@ -77,7 +80,7 @@ export async function getStaticProps(context: GetStaticPropsContext<{ slug: stri
             trpcState: ssg.dehydrate(),
             slug,
         },
-        revalidate: 1,
+        revalidate: Number.parseInt(env.REVALIDATE_TIME_SECONDS),
     };
 }
 

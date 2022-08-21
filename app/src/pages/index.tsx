@@ -2,9 +2,6 @@ import type {NextPage} from "next";
 import Head from "next/head";
 import {trpc} from "../utils/trpc";
 import Navigation from "../components/navigation";
-import AllFactions from "./faction";
-import AllChampions from "./champion";
-import AllStories from "./story";
 import {createSSGHelpers} from "@trpc/react/ssg";
 import {appRouter} from "../server/router";
 import {createContext} from "../server/router/context";
@@ -12,14 +9,9 @@ import superjson from "superjson";
 import ViewEntityBox from "../components/view-entity-box";
 import React, {ReactElement, useEffect, useState} from "react";
 import Loading from "../components/loading";
-import {array} from "zod";
 import {Champion, Faction, Story, ChampionStories} from "@prisma/client";
+import {env} from "../env/server.mjs";
 
-type TechnologyCardProps = {
-    name: string;
-    description: string;
-    documentation: string;
-};
 
 function prepareFactionData(factions: Faction[], combinedData: ReactElement[]) {
     factions.forEach((faction) => {
@@ -31,6 +23,7 @@ function prepareFactionData(factions: Faction[], combinedData: ReactElement[]) {
                         title: faction.title!,
                         link: "/faction/" + faction.slug!
                     }}
+                    
                 />
             </div>
         )
@@ -48,6 +41,7 @@ function prepareStoryData(stories: (Story & { championStories: (ChampionStories 
                         title: story.championStories.map((es) => es.champion.name).join(", "),
                         link: "/story/" + story.textId
                     }}
+                    
                 />
             </div>
         )
@@ -65,37 +59,21 @@ function prepareChampionData(champions: Champion[], combinedData: ReactElement[]
                         title: champion.title!,
                         link: "/champion/" + champion.slug
                     }}
+                    
                 />
             </div>
         )
     })
 }
 
-function randomizeArray(combinedData: ReactElement[]) {
-    //randomize positions in array
-    for (let i = combinedData.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        // @ts-ignore
-        [combinedData[i], combinedData[j]] = [combinedData[j], combinedData[i]];
-    }
-}
-
 const Home: NextPage = () => {
     const grid_layout = 'h-auto grid md:grid-cols-2 xl:grid-cols-3 grid-cols-1 mx-3'
     const combinedData: ReactElement[] = [];
-    const [shuffled,setShuffled]= useState<ReactElement[]>([]);
+    const [shuffled, setShuffled] = useState<ReactElement[]>([]);
     const {data: factions, isLoading: factionLoading} = trpc.useQuery(['faction.getAll']);
     const {data: champions, isLoading: championLoading} = trpc.useQuery(['champion.getAll']);
     const {data: stories, isLoading: storyLoading} = trpc.useQuery(['story.getAll']);
-
-
-    if (factionLoading || championLoading || storyLoading || !factions || !champions || !stories) {
-        return <Loading/>
-    }
-
-    prepareFactionData(factions, combinedData);
-    prepareStoryData(stories, combinedData);
-    prepareChampionData(champions, combinedData);
+    const [dataLoaded, setDataLoaded] = useState<boolean>(false);
 
     useEffect(() => {
         const shuffle = (array: ReactElement[]) => {
@@ -112,11 +90,24 @@ const Home: NextPage = () => {
             shuffle(combinedData);
             return combinedData;
         })
-    }, [])
+    }, [dataLoaded])
+
+    if (factionLoading || championLoading || storyLoading || !factions || !champions || !stories) {
+        return <Loading/>
+    }
+
+    prepareFactionData(factions, combinedData);
+    prepareStoryData(stories, combinedData);
+    prepareChampionData(champions, combinedData);
+    if (!dataLoaded) {
+        setDataLoaded(true)
+    }
+
+
     return (
         <>
             <Head>
-                <title>Lorereader</title>
+                <title>Lore Reader</title>
                 <meta name="description" content="LoreReader"/>
                 <link rel="icon" href="/favicon.ico"/>
             </Head>
@@ -146,7 +137,7 @@ export async function getStaticProps() {
         props: {
             trpcState: ssg.dehydrate(),
         },
-        revalidate: 1,
+        revalidate: Number.parseInt(env.REVALIDATE_TIME_SECONDS),
     };
 }
 

@@ -19,6 +19,7 @@ export const serverSchema = z.object({
     SINGLE_STORY_URL: z.string(),
     DEV_FILE_PATH: z.string(),
     PROD_FILE_PATH: z.string(),
+    REVALIDATE_TIME_SECONDS: z.string()
 });
 
 /**

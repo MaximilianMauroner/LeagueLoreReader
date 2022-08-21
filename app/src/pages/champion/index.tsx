@@ -7,6 +7,7 @@ import {appRouter} from "../../server/router";
 import {createContext} from "../../server/router/context";
 import superjson from "superjson";
 import Navigation from "../../components/navigation";
+import {env} from "../../env/server.mjs";
 
 
 const AllChampions: NextPage = () => {
@@ -26,6 +27,7 @@ const AllChampions: NextPage = () => {
                                     title: champion.title!,
                                     link: "/champion/" + champion.slug
                                 }}
+                                
                             />
                         </div>
                     ))}
@@ -50,6 +52,6 @@ export async function getStaticProps() {
         props: {
             trpcState: ssg.dehydrate(),
         },
-        revalidate: 1,
+        revalidate: Number.parseInt(env.REVALIDATE_TIME_SECONDS),
     };
 }

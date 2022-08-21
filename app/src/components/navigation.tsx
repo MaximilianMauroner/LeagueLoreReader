@@ -4,6 +4,7 @@ import {Disclosure} from '@headlessui/react'
 import {MenuIcon, XIcon} from '@heroicons/react/outline'
 import {Search} from '@mui/icons-material/';
 import Link from "next/link";
+import {z} from "zod";
 
 function classNames(...classes: string[]) {
     return classes.filter(Boolean).join(' ')
@@ -13,18 +14,31 @@ function classNames(...classes: string[]) {
 const Navigation: React.FC<{}> = () => {
     const router = useRouter();
     const [navigation, setNavigation] = useState([
-        {name: 'Home', href: '/home', current: true},
-        {name: 'Champions', href: '/champion/', current: false},
-        {name: 'Factions', href: '/faction/', current: false},
-        {name: 'Stories', href: '/story/', current: false},
+        {name: 'Home', href: '/', current: true},
+        {name: 'Champions', href: '/champion', current: false},
+        {name: 'Factions', href: '/faction', current: false},
+        {name: 'Stories', href: '/story', current: false},
         // {name: 'Text-to-Speech Stories', href: '/tts/all', current: false},
     ])
+    const navigationValidator = z.array(z.object({
+        name: z.string(),
+        href: z.string().startsWith("/"),
+        current: z.boolean()
+    }))
     useEffect(() => {
         let pathname = router.pathname;
-        let temp = navigation
-        for (let i = 0; i < navigation.length; i++) {
-            // @ts-ignore
-            temp[0].current = (pathname === temp[i].href || pathname.includes(temp[i].href));
+        let temp = navigationValidator.parse(navigation)
+        for (let i = 0; i < temp.length; i++) {
+            let curr = temp[i]
+            if (curr === undefined) {
+                return
+            }
+            if (i == 0) {
+                curr.current = pathname === curr.href
+            } else {
+                curr.current = (pathname === curr.href || pathname.includes(curr.href));
+            }
+            temp[i] = curr;
         }
         setNavigation([...temp])
 
@@ -56,7 +70,7 @@ const Navigation: React.FC<{}> = () => {
                                             <Link
                                                 key={item.name}
                                                 href={item.href}
-
+                                                passHref={true}
                                             >
                                                 <a
                                                     aria-current={item.current ? 'page' : undefined}

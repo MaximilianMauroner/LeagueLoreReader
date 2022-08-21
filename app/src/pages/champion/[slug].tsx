@@ -15,6 +15,7 @@ import {Champion} from "@prisma/client";
 import Image from "next/image";
 import Navigation from "../../components/navigation";
 import Heading from "../../components/heading";
+import {env} from "../../env/server.mjs";
 
 
 const ChampionPage: NextPage = () => {
@@ -48,6 +49,7 @@ const ChampionPage: NextPage = () => {
                                     title: championData.name,
                                     link: "/story/" + story.story.textId
                                 }}
+                                
 
                             />
                         </div>
@@ -63,6 +65,7 @@ const ChampionPage: NextPage = () => {
                                     title: championData.faction.title,
                                     link: "/faction/" + championData.faction.slug
                                 }}
+                                
                             />
                         </div>
                     </>
@@ -81,6 +84,7 @@ const ChampionPage: NextPage = () => {
                                             title: champion.title!,
                                             link: "/champion/" + champion.slug
                                         }}
+                                        
                                     />
                                 </div>
                             ))}
@@ -135,7 +139,7 @@ export async function getStaticProps(context: GetStaticPropsContext<{ slug: stri
             trpcState: ssg.dehydrate(),
             slug,
         },
-        revalidate: 1,
+        revalidate: Number.parseInt(env.REVALIDATE_TIME_SECONDS),
     };
 }
 

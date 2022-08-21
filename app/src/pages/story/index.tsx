@@ -1,20 +1,18 @@
-import {GetStaticPaths, GetStaticPropsContext, NextPage} from "next";
+import {NextPage} from "next";
 import {createSSGHelpers} from "@trpc/react/ssg";
 import {appRouter} from "../../server/router";
 import {createContext} from "../../server/router/context";
 import superjson from "superjson";
-import {prisma} from "../../server/db/client";
 import {trpc} from "../../utils/trpc";
-import Heading from "../../components/heading";
 import ViewEntityBox from "../../components/view-entity-box";
 import React from "react";
-import {DisplayFaction} from "../faction/[slug]";
 import Navigation from "../../components/navigation";
+import {env} from "../../env/server.mjs";
 
 
 const AllStories: NextPage = () => {
     const grid_layout = 'h-auto grid md:grid-cols-2 xl:grid-cols-3 grid-cols-1 mx-3'
-    const {data: stories, isLoading} = trpc.useQuery(['story.getAll']);
+    const {data: stories} = trpc.useQuery(['story.getAll']);
     return (
         <>
             <Navigation/>
@@ -29,7 +27,7 @@ const AllStories: NextPage = () => {
                                     title: story.championStories.map((es) => es.champion.name).join(", "),
                                     link: "/story/" + story.textId
                                 }}
-
+                                
                             />
                         </div>
                     ))}
@@ -53,6 +51,6 @@ export async function getStaticProps() {
         props: {
             trpcState: ssg.dehydrate(),
         },
-        revalidate: 1,
+        revalidate: Number.parseInt(env.REVALIDATE_TIME_SECONDS),
     };
 }

@@ -1,6 +1,7 @@
 import {createRouter} from "./context";
 import {env} from "../../env/server.mjs";
 import {z} from "zod";
+import {Story} from "@prisma/client";
 
 
 export const storyRouter = createRouter()

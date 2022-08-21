@@ -14,6 +14,7 @@ import {trpc} from "../../utils/trpc";
 import Heading from "../../components/heading";
 import Image from "next/image";
 import Navigation from "../../components/navigation";
+import {env} from "../../env/server.mjs";
 
 export const FactionPage: NextPage = () => {
     const grid_layout = 'h-auto grid md:grid-cols-2 xl:grid-cols-3 grid-cols-1 mx-3'
@@ -41,6 +42,7 @@ export const FactionPage: NextPage = () => {
                                 title: champion.title!,
                                 link: "/champion/" + champion.slug
                             }}
+                            
                         />
                     </div>
                 ))}
@@ -97,7 +99,7 @@ export async function getStaticProps(context: GetStaticPropsContext<{ slug: stri
             trpcState: ssg.dehydrate(),
             slug,
         },
-        revalidate: 1,
+        revalidate: Number.parseInt(env.REVALIDATE_TIME_SECONDS),
     };
 }
 

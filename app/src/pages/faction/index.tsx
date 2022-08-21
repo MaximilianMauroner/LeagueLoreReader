@@ -7,6 +7,7 @@ import {trpc} from "../../utils/trpc";
 import ViewEntityBox from "../../components/view-entity-box";
 import React from "react";
 import Navigation from "../../components/navigation";
+import {env} from "../../env/server.mjs";
 
 
 const AllFactions: NextPage = () => {
@@ -24,6 +25,7 @@ const AllFactions: NextPage = () => {
                                 title: faction.title,
                                 link: "/faction/" + faction.slug
                             }}
+                            
                         />
                     </div>
                 ))}
@@ -46,6 +48,6 @@ export async function getStaticProps() {
         props: {
             trpcState: ssg.dehydrate(),
         },
-        revalidate: 1,
+        revalidate: Number.parseInt(env.REVALIDATE_TIME_SECONDS),
     };
 }

@@ -1,5 +1,7 @@
 import {createRouter} from "./context";
 import {env} from "../../env/server.mjs";
+import {PrismaClient, Story} from "@prisma/client";
+import {z} from "zod";
 
 export const fileRouter = createRouter()
     .query("updateAll", {
@@ -32,4 +34,61 @@ export const fileRouter = createRouter()
             });
             return await ctx.prisma.file.findMany({})
         },
+    }).query("create", {
+        input: z.object({
+            textId: z.string().min(1),
+        }),
+        async resolve({ctx, input}) {
+            const story = await ctx.prisma.story.findFirst({
+                where: {textId: input.textId},
+                include: {
+                    championStories: {
+                        include: {
+                            champion: true,
+                        }
+                    }
+                }
+            })
+            if (story) {
+                await createFile(story, ctx.prisma);
+            }
+            return story
+        }
     })
+
+
+async function createFile(story: Story, prisma: PrismaClient) {
+    const content = story.htmlStory.replace(/(<([^>]+)>)/gi, "")
+    const gTTS = require('gtts');
+    const fs = require('fs');
+    var gtts = new gTTS(content, 'en');
+
+    const path = env.NODE_ENV === "development" ? env.DEV_FILE_PATH : env.PROD_FILE_PATH
+
+    if (fs.existsSync(`${path + story.textId}.mp3`)) {
+        console.log(`${path + story.textId}.mp3`, "already exists")
+        return;
+    }
+    gtts.save(`${path + story.textId}.mp3`, async function (err: string | undefined, result: any) {
+        if (err) {
+            throw new Error(err);
+        } else {
+            await prisma.file.upsert({
+                    where: {storyId: story.id},
+                    update: {
+                        fileName: `${story.textId}.mp3`,
+                        savePath: `${path + story.textId}.mp3`,
+                        storyId: story.id
+                    },
+                    create: {
+                        fileName: `${story.textId}.mp3`,
+                        savePath: `${path + story.textId}.mp3`,
+                        storyId: story.id
+                    }
+                }
+            )
+        }
+        console.log("Text to speech converted!");
+    });
+
+}
