@@ -40,3 +40,4 @@ yarn-error.log*
 *.tsbuildinfo
 
 public/LoreFiles/*
+/.idea/
