@@ -8,6 +8,7 @@ import {createContext} from "../../server/router/context";
 import superjson from "superjson";
 import Navigation from "../../components/navigation";
 import {env} from "../../env/server.mjs";
+import Head from "next/head";
 
 
 const AllChampions: NextPage = () => {
@@ -15,6 +16,11 @@ const AllChampions: NextPage = () => {
     const {data: champions, isLoading} = trpc.useQuery(['champion.getAll']);
     return (
         <>
+            <Head>
+                <title>All Champions</title>
+                <meta name="description"
+                      content="List all Champions"/>
+            </Head>
             <Navigation/>
             <div className="bg-gray-800 pt-5 md:pt-2 min-h-screen h-full px-3">
                 <div className={grid_layout}>
@@ -27,7 +33,7 @@ const AllChampions: NextPage = () => {
                                     title: champion.title!,
                                     link: "/champion/" + champion.slug
                                 }}
-                                
+
                             />
                         </div>
                     ))}

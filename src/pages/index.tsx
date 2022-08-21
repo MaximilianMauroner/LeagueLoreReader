@@ -23,7 +23,6 @@ function prepareFactionData(factions: Faction[], combinedData: ReactElement[]) {
                         title: faction.title!,
                         link: "/faction/" + faction.slug!
                     }}
-                    
                 />
             </div>
         )
@@ -41,7 +40,7 @@ function prepareStoryData(stories: (Story & { championStories: (ChampionStories 
                         title: story.championStories.map((es) => es.champion.name).join(", "),
                         link: "/story/" + story.textId
                     }}
-                    
+
                 />
             </div>
         )
@@ -59,7 +58,7 @@ function prepareChampionData(champions: Champion[], combinedData: ReactElement[]
                         title: champion.title!,
                         link: "/champion/" + champion.slug
                     }}
-                    
+
                 />
             </div>
         )
@@ -77,9 +76,9 @@ const Home: NextPage = () => {
 
     useEffect(() => {
         const shuffle = (array: ReactElement[]) => {
-            for (var i = array.length - 1; i > 0; i--) {
-                var j = Math.floor(Math.random() * (i + 1));
-                var temp = array[i];
+            for (let i = array.length - 1; i > 0; i--) {
+                let j = Math.floor(Math.random() * (i + 1));
+                let temp = array[i];
                 // @ts-ignore
                 array[i] = array[j];
                 // @ts-ignore
@@ -126,7 +125,7 @@ export async function getStaticProps() {
     const ssg = createSSGHelpers({
         router: appRouter,
         ctx: await createContext(),
-        transformer: superjson, // optional - adds superjson serialization
+        transformer: superjson,
     });
 
     await ssg.fetchQuery('faction.getAll');

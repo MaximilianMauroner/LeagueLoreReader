@@ -16,6 +16,7 @@ import Image from "next/image";
 import Navigation from "../../components/navigation";
 import Heading from "../../components/heading";
 import {env} from "../../env/server.mjs";
+import Head from "next/head";
 
 
 const ChampionPage: NextPage = () => {
@@ -33,6 +34,11 @@ const ChampionPage: NextPage = () => {
     }
     return (
         <>
+            <Head>
+                <title>{[championData.name, championData.title].join(" ")}</title>
+                <meta name="description"
+                      content={[championData.name, championData.title].join(" ")}/>
+            </Head>
             <Navigation/>
             <div className="bg-gray-800 pt-5 md:pt-2 min-h-screen h-full px-3">
                 <div className={"w-auto"}>

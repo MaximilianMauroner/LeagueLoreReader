@@ -11,7 +11,7 @@ const entityValidator = z.object({
 })
 const ViewEntityBox: React.FC<{ entity: z.infer<typeof entityValidator> }> = ({entity}) => {
     return (
-        <Link href={entity.link} >
+        <Link href={entity.link}>
             <a>
                 <div
                     className="py-6 px-4 max-w-4xl mx-auto grid grid-cols-1 hover:-translate-y-3 hover:scale-110 ease-in-out duration-300">
@@ -29,7 +29,7 @@ const ViewEntityBox: React.FC<{ entity: z.infer<typeof entityValidator> }> = ({e
                                 width={500}
                                 height={300}
                                 className={"object-top object-cover rounded-lg"}
-                                alt={entity.name}/>
+                                alt={entity.name ? entity.name : entity.title}/>
                         </div>
                     </div>
                 </div>

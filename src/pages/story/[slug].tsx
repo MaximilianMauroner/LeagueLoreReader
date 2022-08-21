@@ -14,6 +14,9 @@ import {trpc} from "../../utils/trpc";
 import Heading from "../../components/heading";
 import Navigation from "../../components/navigation";
 import {env} from "../../env/server.mjs";
+import Head from "next/head";
+import {StoryType} from "@prisma/client";
+
 
 export const StoryPage: NextPage = () => {
     const grid_layout = 'h-auto grid md:grid-cols-2 xl:grid-cols-3 grid-cols-1 mx-3'
@@ -26,7 +29,16 @@ export const StoryPage: NextPage = () => {
     if (isLoading || story == null) {
         return (<Loading/>)
     }
+    let head = story.title + ": " + story.championStories.map(cs => cs.champion.name).join(", ")
+    if (story.type === StoryType.BIOGRAPHY) {
+        head = story.championStories.map(cs => cs.champion.name).join(", ") + " " + story.title
+    }
     return <>
+        <Head>
+            <title>{head}</title>
+            <meta name="description"
+                  content={head}/>
+        </Head>
         <Navigation/>
         <div className="bg-gray-800 md:pt-5 pt-2 min-h-screen h-full px-3">
             <div className={"pb-5 text-white content-center flex flex-col items-center"}>
@@ -52,7 +64,7 @@ export const StoryPage: NextPage = () => {
                                 title: cs.champion.title!,
                                 link: "/champion/" + cs.champion.slug
                             }}
-                            
+
                         />
                     </div>
                 ))}
