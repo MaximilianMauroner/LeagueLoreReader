@@ -18,6 +18,7 @@ function defineNextConfig(config) {
 
 export default defineNextConfig({
     reactStrictMode: true,
+    output: 'standalone',
     swcMinify: true,
     images: {
         domains: ['images.contentstack.io'],
