@@ -32,5 +32,7 @@ jobs:
           # ssh password
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           # path of ssh private key
-          script: cd ~/LeagueLoreReader && git reset –hard HEAD && git pull main
-          # stop script after first failure
+          script: |
+            cd ~/LeagueLoreReader 
+            git reset --hard HEAD
+            git pull origin main
