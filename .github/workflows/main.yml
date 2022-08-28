@@ -42,14 +42,10 @@ jobs:
       - name: SSH Remote Commands
         uses: appleboy/ssh-action@v0.1.5
         with:
-          # ssh host
-          host: 167.235.131.158
-          # ssh port
+          host: ${{ secrets.SSH_HOST }}
           username: root
-          # ssh password
-          key: ${{ secrets.SSH_HOST }}
-          # path of ssh private key
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
             cd ~/LeagueLoreReader 
             docker build -t nextjs-docker .
-            docker run -p 3000:3000 nextjs-docker
+            docker run  -d --restart unless-stopped -p 3000:3000 nextjs-docker
