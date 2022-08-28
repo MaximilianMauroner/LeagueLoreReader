@@ -24,21 +24,21 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v1
-      
+
       - run: ls
-      
+
       - name: Install SSH Key
         uses: shimataro/ssh-key-action@v2
         with:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           known_hosts: unnecessary
-      
+
       - name: Adding Known Hosts
         run: ssh-keyscan -p 22 -H ${{ secrets.SSH_HOST }}  >> ~/.ssh/known_hosts
-      
-      -  name: Deploy with rsync
-         run: rsync -avz -e "ssh -p ${{ secrets.SSH_PORT }}" . ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:~/LeagueLoreReader
-         
+
+      - name: Deploy with rsync
+        run: rsync -avz -e "ssh -p ${{ secrets.SSH_PORT }}" . ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:~/LeagueLoreReader
+
       - name: SSH Remote Commands
         uses: appleboy/ssh-action@v0.1.5
         with:
@@ -48,4 +48,4 @@ jobs:
           script: |
             cd ~/LeagueLoreReader 
             docker build -t nextjs-docker .
-            docker run  -d --restart unless-stopped -p 3000:3000 nextjs-docker
+            docker ps | grep priceless_archimedes >/dev/null || docker run  -d --restart unless-stopped -p 3000:3000 --name priceless_archimedes nextjs-docker 
