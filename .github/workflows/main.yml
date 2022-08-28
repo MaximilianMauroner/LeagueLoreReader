@@ -38,3 +38,18 @@ jobs:
       
       -  name: Deploy with rsync
          run: rsync -avz -e "ssh -p ${{ secrets.SSH_PORT }}" . ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:~/LeagueLoreReader
+         
+      - name: SSH Remote Commands
+        uses: appleboy/ssh-action@v0.1.5
+        with:
+          # ssh host
+          host: 167.235.131.158
+          # ssh port
+          username: root
+          # ssh password
+          key: ${{ secrets.SSH_HOST }}
+          # path of ssh private key
+          script: |
+            cd ~/LeagueLoreReader 
+            docker build -t nextjs-docker .
+            docker run -p 3000:3000 nextjs-docker
