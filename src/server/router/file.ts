@@ -81,7 +81,7 @@ async function createFile(story: Story, prisma: PrismaClient) {
     const content = story.htmlStory.replace(/(<([^>]+)>)/gi, "")
     const gTTS = require('gtts');
     const fs = require('fs');
-    var gtts = new gTTS(content, 'en');
+    let gtts = new gTTS(content, 'en');
 
     const path = env.NODE_ENV === "development" ? env.DEV_FILE_PATH : env.PROD_FILE_PATH
     let createFile = false;
