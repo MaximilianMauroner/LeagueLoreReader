@@ -84,21 +84,23 @@ async function createFile(story: Story, prisma: PrismaClient) {
     let gtts = new gTTS(content, 'en');
 
     const path = env.NODE_ENV === "development" ? env.DEV_FILE_PATH : env.PROD_FILE_PATH
-    let createFile = false;
+    console.log(path);
+    let fileCreated = false;
     if (fs.existsSync(`${path + story.textId}.mp3`)) {
         console.log(`${path + story.textId}.mp3`, "already exists")
-        createFile = true;
+        fileCreated = true;
     } else {
         await gtts.save(`${path + story.textId}.mp3`, async function (err: string | undefined, result: any) {
             if (err) {
+                console.log(err)
                 throw new Error(err);
             } else {
-                createFile = true
+                fileCreated = true
             }
             console.info(`Story with TextId: ${story.textId} created!`);
         });
     }
-    if (createFile) {
+    if (fileCreated) {
         await prisma.file.upsert({
                 where: {storyId: story.id},
                 update: {
