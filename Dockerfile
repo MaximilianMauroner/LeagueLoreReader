@@ -4,7 +4,7 @@ FROM node:16-alpine AS deps
 RUN apk add --no-cache libc6-compat
 WORKDIR /app
 
-COPY .env .env
+#COPY .env .env
 COPY ./prisma ./prisma
 # Install dependencies based on the preferred package manager
 COPY package.json yarn.lock* package-lock.json* pnpm-lock.yaml* ./
@@ -17,6 +17,7 @@ FROM node:16-alpine AS builder
 WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
+RUN chmod -R 777 .
 
 RUN npm run build
 
