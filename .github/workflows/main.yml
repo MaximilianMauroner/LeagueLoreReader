@@ -1,4 +1,3 @@
-
 name: CI
 
 # Controls when the workflow will run
@@ -47,4 +46,6 @@ jobs:
           script: |
             cd ~/LeagueLoreReader 
             docker build -t nextjs-docker .
-            docker ps | grep priceless_archimedes >/dev/null || docker run  -d --restart unless-stopped -p 3000:3000 --name priceless_archimedes nextjs-docker 
+            docker stop priceless_archimedes
+            docker rm priceless_archimedes
+            docker run -d --restart unless-stopped -p 3000:3000 --name priceless_archimedes nextjs-docker 
