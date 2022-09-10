@@ -134,7 +134,7 @@ const ViewAudioFile: React.FC<{
         )
     }
 
-    const filePath = env.NEXT_PUBLIC_DEV_FILE_PATH + file.fileName
+    const filePath = env.NEXT_PUBLIC_FILE_PATH + file.fileName
     const trackStyling = `-webkit-gradient(linear, 0% 0%, 100% 0%, color-stop(${currentPercentage}, #fff), color-stop(${currentPercentage}, #777))`;
 
     return (
