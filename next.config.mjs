@@ -1,7 +1,5 @@
 // import {env} from "./src/env/server.mjs";
 
-// import pkg from '@next/bundle-analyzer'
-
 /**
  * Don't be scared of the generics here.
  * All they do is to give us autocompletion when using this.
@@ -11,15 +9,13 @@
  * @constraint {{import('next').NextConfig}}
  */
 function defineNextConfig(config) {
-    // return pkg({config});
     return config;
 }
 
-
 export default defineNextConfig({
     reactStrictMode: true,
-    output: 'standalone',
     swcMinify: true,
+    output: "standalone",
     images: {
         domains: ['images.contentstack.io'],
     },
