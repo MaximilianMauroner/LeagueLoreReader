@@ -111,18 +111,19 @@ async function createFile(story: Story, prisma: PrismaClient) {
                 fileCreated = true;
             }
         }
+        const filePath = `./tempfiles/${story.textId}.mp3`;
         if (!fileCreated) {
-            await gtts.save(`${story.textId}.mp3`, async function (err: string | undefined, result: any) {
+            await gtts.save(filePath, async function (err: string | undefined, result: any) {
                 if (err) {
                     console.log(err)
                     throw new Error(err);
                 } else {
                     console.log(result)
                     fileCreated = true
-                    const fileCreatedResponse = await client.uploadFrom(`${story.textId}.mp3`, story.textId + ".mp3")
+                    const fileCreatedResponse = await client.uploadFrom(filePath, story.textId + ".mp3")
                     console.log("response", fileCreatedResponse)
                     client.close()
-                    await fs.unlink(`${story.textId}.mp3`, (err: any) => {
+                    await fs.unlink(filePath, (err: any) => {
                         if (err) throw err;
                         console.log(`successfully deleted ${story.textId}.mp3`);
                     });
