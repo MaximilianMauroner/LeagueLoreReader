@@ -1,4 +1,4 @@
-import {env} from "./src/env/server.mjs";
+// import {env} from "./src/env/server.mjs";
 
 // import pkg from '@next/bundle-analyzer'
 
