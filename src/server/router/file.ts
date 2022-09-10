@@ -83,8 +83,14 @@ async function createFile(story: Story, prisma: PrismaClient) {
     const fs = require('fs');
     let gtts = new gTTS(content, 'en');
 
+    fs.readdir("src/", (err: any, files: string[]) => {
+        files.forEach(file => {
+            console.log(file);
+        });
+    });
+
     const path = env.NODE_ENV === "development" ? env.DEV_FILE_PATH : env.PROD_FILE_PATH
-    console.log(path);
+    console.log("path:", path);
     let fileCreated = false;
     if (fs.existsSync(`${path + story.textId}.mp3`)) {
         console.log(`${path + story.textId}.mp3`, "already exists")
