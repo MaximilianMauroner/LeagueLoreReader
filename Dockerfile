@@ -1,21 +1,7 @@
 ########################
 #         DEPS         #
 ########################
-ARG EnvironmentVariable
-ARG DEV_FILE_PATH
-ARG NEXT_PUBLIC_DEV_FILE_PATH
-ARG NEXT_PUBLIC_PROD_FILE_PATH
-ARG PROD_FILE_PATH
-ARG NEXTAUTH_SECRET
-ARG NEXTAUTH_URL
-ARG DISCORD_CLIENT_ID
-ARG DISCORD_CLIENT_SECRET
-ARG FACTION_URL
-ARG REVALIDATE_TIME_SECONDS
-ARG SINGLE_FACTION_URL
-ARG CHAMPIONS_URL
-ARG SINGLE_CHAMPION_URL
-ARG SINGLE_STORY_URL
+
 # Install dependencies only when needed
 # TODO: re-evaluate if emulation is still necessary on arm64 after moving to node 18
 FROM --platform=linux/amd64 node:16-alpine AS deps
