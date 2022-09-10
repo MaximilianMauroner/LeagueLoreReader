@@ -1,7 +1,6 @@
 import React from "react";
 import Loading from "../../components/loading";
 import ViewEntityBox from "../../components/view-entity-box";
-import ViewAudioFile from "../../components/view-audio-file";
 import {GetStaticPaths, GetStaticPropsContext, NextPage} from "next";
 import {useRouter} from "next/router";
 import {createSSGHelpers} from "@trpc/react/ssg";
@@ -16,6 +15,8 @@ import Navigation from "../../components/navigation";
 import {env} from "../../env/server.mjs";
 import Head from "next/head";
 import {StoryType} from "@prisma/client";
+import dynamic from 'next/dynamic'
+import {Suspense} from 'react'
 
 
 export const StoryPage: NextPage = () => {
@@ -25,6 +26,11 @@ export const StoryPage: NextPage = () => {
     const slugValidator = z.string()
     slug = slugValidator.parse(slug)
     const {data: story, isLoading} = trpc.useQuery(['story.bySlug', {slug}]);
+
+    const DynamicViewAudioFile = dynamic(() => import("../../components/view-audio-file"), {
+        suspense: true,
+        loading: () => <Loading/>,
+    })
 
     if (isLoading || story == null) {
         return (<Loading/>)
@@ -46,8 +52,15 @@ export const StoryPage: NextPage = () => {
                     <h1 className="mb-4 text-2xl tracking-tight font-bold text-slate-200 text-center">
                         {story.title}
                     </h1>
-                    {story?.file ? <ViewAudioFile story={story} champions={story.championStories.map(cs => cs.champion)}
-                                                  file={story.file}/> : null}
+                    {story?.file ?
+                        <>
+                            <Suspense fallback={null}>
+                                <DynamicViewAudioFile story={story}
+                                                      champions={story.championStories.map(cs => cs.champion)}
+                                                      file={story.file}/>
+                            </Suspense>
+                        </>
+                        : null}
 
                     <div className="mb-6 prose text-gray-200 antialiased  tracking-wide prose-dark"
                          dangerouslySetInnerHTML={{__html: story.htmlStory}}/>

@@ -31,12 +31,6 @@ services:
       PMA_HOST: mysql
     networks:
       - lorereader
-  app:
-    build: .
-    ports:
-      - "3000:3000"
-    volumes:
-      - mysql-lorereader:/app/public
 networks:
   lorereader:
     driver: bridge
