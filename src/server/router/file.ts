@@ -3,38 +3,48 @@ import {env} from "../../env/server.mjs";
 import {PrismaClient, Story} from "@prisma/client";
 import {z} from "zod";
 import path from 'path'
+import * as ftp from "basic-ftp"
+import * as fsp from 'node:fs/promises';
 
 
 export const fileRouter = createRouter()
     .query("updateAll", {
         async resolve({ctx}) {
-            const fs = require('fs');
-            const path = env.NODE_ENV === "development" ? env.DEV_FILE_PATH : env.PROD_FILE_PATH
-
-            await fs.readdir(path, async (err: any, files: any[]) => {
+            const client = new ftp.Client()
+            try {
+                await client.access({
+                    host: env.FTP_SERVER_HOST,
+                    user: env.FTP_SERVER_USERNAME,
+                    password: env.FTP_SERVER_PASSWORD,
+                    secure: true
+                })
+                const files = await client.list()
                 for (const file of files) {
                     const story = await ctx.prisma.story.findFirst({
                         select: {id: true},
-                        where: {textId: file.split(".mp3")[0]}
+                        where: {textId: file.name.split(".mp3")[0]}
                     })
                     if (story) {
                         await ctx.prisma.file.upsert({
                                 where: {storyId: story.id},
                                 update: {
-                                    fileName: file,
-                                    savePath: path + file,
+                                    fileName: file.name,
+                                    savePath: file.name,
                                     storyId: story.id
                                 },
                                 create: {
-                                    fileName: file,
-                                    savePath: path + file,
+                                    fileName: file.name,
+                                    savePath: file.name,
                                     storyId: story.id
                                 }
                             }
                         )
                     }
                 }
-            });
+            } catch (err) {
+                console.log(err)
+                client.close()
+            }
             return await ctx.prisma.file.findMany({})
         },
     }).query("create", {
@@ -84,40 +94,63 @@ async function createFile(story: Story, prisma: PrismaClient) {
     const gTTS = require('gtts');
     const fs = require('fs');
     let gtts = new gTTS(content, 'en');
-
-    const filePath = path.resolve(env.NODE_ENV === "development" ? env.DEV_FILE_PATH : env.PROD_FILE_PATH)
-    console.log("path:", filePath);
+    const client = new ftp.Client()
     let fileCreated = false;
-    if (fs.existsSync(`${filePath + story.textId}.mp3`)) {
-        console.log(`${filePath + story.textId}.mp3`, "already exists")
-        fileCreated = true;
-    } else {
-        await gtts.save(`${filePath + story.textId}.mp3`, async function (err: string | undefined, result: any) {
-            if (err) {
-                console.log(err)
-                throw new Error(err);
-            } else {
-                fileCreated = true
+    try {
+        await client.access({
+            host: env.FTP_SERVER_HOST,
+            user: env.FTP_SERVER_USERNAME,
+            password: env.FTP_SERVER_PASSWORD,
+            secure: true
+        })
+        const files = await client.list()
+
+        for (const file of files) {
+            if (file.name === story.textId + ".mp3") {
+                console.log(`${story.textId}.mp3`, "already exists")
+                fileCreated = true;
             }
-            console.info(`Story with TextId: ${story.textId} created!`);
-        });
+        }
+        if (!fileCreated) {
+            await gtts.save(`${story.textId}.mp3`, async function (err: string | undefined, result: any) {
+                if (err) {
+                    console.log(err)
+                    throw new Error(err);
+                } else {
+                    console.log(result)
+                    fileCreated = true
+                    const fileCreatedResponse = await client.uploadFrom(`${story.textId}.mp3`, story.textId + ".mp3")
+                    console.log("response", fileCreatedResponse)
+                    client.close()
+                    await fs.unlink(`${story.textId}.mp3`, (err: any) => {
+                        if (err) throw err;
+                        console.log(`successfully deleted ${story.textId}.mp3`);
+                    });
+                }
+                console.info(`Story with TextId: ${story.textId} created!`);
+            })
+        }
+    } catch
+        (err) {
+        console.log(err)
+        client.close()
     }
+
+
     if (fileCreated) {
         await prisma.file.upsert({
                 where: {storyId: story.id},
                 update: {
                     fileName: `${story.textId}.mp3`,
-                    savePath: `${path + story.textId}.mp3`,
+                    savePath: `${story.textId}.mp3`,
                     storyId: story.id
                 },
                 create: {
                     fileName: `${story.textId}.mp3`,
-                    savePath: `${path + story.textId}.mp3`,
+                    savePath: `${story.textId}.mp3`,
                     storyId: story.id
                 }
             }
         )
     }
-
-
 }

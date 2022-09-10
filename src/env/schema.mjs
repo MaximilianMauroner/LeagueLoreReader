@@ -17,8 +17,9 @@ export const serverSchema = z.object({
     CHAMPIONS_URL: z.string(),
     SINGLE_CHAMPION_URL: z.string(),
     SINGLE_STORY_URL: z.string(),
-    DEV_FILE_PATH: z.string(),
-    PROD_FILE_PATH: z.string(),
+    FTP_SERVER_USERNAME: z.string(),
+    FTP_SERVER_PASSWORD: z.string(),
+    FTP_SERVER_HOST: z.string(),
     REVALIDATE_TIME_SECONDS: z.string()
 });
 

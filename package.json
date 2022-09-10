@@ -25,6 +25,7 @@
     "@trpc/next": "^9.27.0",
     "@trpc/react": "^9.27.0",
     "@trpc/server": "^9.27.0",
+    "basic-ftp": "^5.0.2",
     "gtts": "^0.2.1",
     "next": "12.2.3",
     "next-auth": "^4.10.3",
