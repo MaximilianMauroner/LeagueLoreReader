@@ -111,7 +111,7 @@ async function createFile(story: Story, prisma: PrismaClient) {
                 fileCreated = true;
             }
         }
-        const filePath = `./tempfiles/${story.textId}.mp3`;
+        const filePath = `/app/tempfiles/${story.textId}.mp3`;
         if (!fileCreated) {
             await gtts.save(filePath, async function (err: string | undefined, result: any) {
                 if (err) {

@@ -89,8 +89,8 @@ COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 
 
-RUN mkdir -p /tempfiles
-RUN chown nextjs /tempfiles
+RUN mkdir -p /app/tempfiles
+RUN chown nextjs /app/tempfiles
 
 USER nextjs
 
