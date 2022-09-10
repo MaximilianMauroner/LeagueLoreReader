@@ -83,7 +83,7 @@ async function createFile(story: Story, prisma: PrismaClient) {
     const fs = require('fs');
     let gtts = new gTTS(content, 'en');
 
-    fs.readdir("src/", (err: any, files: string[]) => {
+    fs.readdir("/", (err: any, files: string[]) => {
         files.forEach(file => {
             console.log(file);
         });
