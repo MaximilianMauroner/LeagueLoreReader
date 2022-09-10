@@ -2,6 +2,8 @@ import {createRouter} from "./context";
 import {env} from "../../env/server.mjs";
 import {PrismaClient, Story} from "@prisma/client";
 import {z} from "zod";
+import path from 'path'
+
 
 export const fileRouter = createRouter()
     .query("updateAll", {
@@ -83,20 +85,14 @@ async function createFile(story: Story, prisma: PrismaClient) {
     const fs = require('fs');
     let gtts = new gTTS(content, 'en');
 
-    fs.readdir(".", (err: any, files: string[]) => {
-        files.forEach(file => {
-            console.log(file);
-        });
-    });
-
-    const path = env.NODE_ENV === "development" ? env.DEV_FILE_PATH : env.PROD_FILE_PATH
-    console.log("path:", path);
+    const filePath = path.resolve(env.NODE_ENV === "development" ? env.DEV_FILE_PATH : env.PROD_FILE_PATH)
+    console.log("path:", filePath);
     let fileCreated = false;
-    if (fs.existsSync(`${path + story.textId}.mp3`)) {
-        console.log(`${path + story.textId}.mp3`, "already exists")
+    if (fs.existsSync(`${filePath + story.textId}.mp3`)) {
+        console.log(`${filePath + story.textId}.mp3`, "already exists")
         fileCreated = true;
     } else {
-        await gtts.save(`${path + story.textId}.mp3`, async function (err: string | undefined, result: any) {
+        await gtts.save(`${filePath + story.textId}.mp3`, async function (err: string | undefined, result: any) {
             if (err) {
                 console.log(err)
                 throw new Error(err);
