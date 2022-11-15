@@ -18,7 +18,7 @@ import Head from "next/head";
 import {createProxySSGHelpers} from "@trpc/react-query/ssg";
 
 export const FactionPage: NextPage = () => {
-    const grid_layout = 'h-auto grid md:grid-cols-2 xl:grid-cols-3 grid-cols-1 mx-3'
+    const grid_layout = 'h-auto grid md:grid-cols-2 xl:grid-cols-3 grid-cols-1 sm:mx-3 mx-1'
     const router = useRouter()
     let {slug} = router.query
     const slugValidator = z.string()
@@ -40,7 +40,7 @@ export const FactionPage: NextPage = () => {
             <Heading title={"Champions"}/>
             <div className={grid_layout}>
                 {faction.champions.map((champion) => (
-                    <div key={champion.id} className={"mx-5"}>
+                    <div key={champion.id} className={"md:mx-5 sm:mx-3 mx-1"}>
                         <ViewEntityBox
                             entity={{
                                 imageUrl: champion.imageUrl,
@@ -62,7 +62,7 @@ export const DisplayFaction: React.FC<{ faction: Faction & { champions: Champion
     return (
         <div className="container mx-auto py-9 md:py-2">
             <div className="flex items-strech justify-center flex-col ">
-                <div className="flex flex-col items-strech justify-between py-6 px-6">
+                <div className="flex flex-col items-strech justify-between py-3 px-1 md:py-6 md:px-6">
                     <h1 className={"text-center pt-3 text-4xl text-white"}>{faction.title}</h1>
                     <h3 className={"text-center pb-3 text-xl text-white"}><span
                         className={"font-bold text-3xl"}>{faction?.champions.length}</span>&nbsp;Champions are part of
@@ -71,7 +71,7 @@ export const DisplayFaction: React.FC<{ faction: Faction & { champions: Champion
                         <Image
                             fill
                             src={faction.imageUrl}
-                            className={"object-contain"}
+                            className={"sm:object-contain object-cover rounded-xl"}
                             alt={faction.title}
                             priority={true}
                         />

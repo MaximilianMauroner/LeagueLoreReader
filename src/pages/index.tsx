@@ -7,11 +7,12 @@ import React, {ReactElement, useEffect, useState} from "react";
 import Loading from "../components/loading";
 import {Champion, Faction, Story, ChampionStories} from "@prisma/client";
 
+const box_class = "md:mx-5 sm:mx-3 mx-1" 
 
 function prepareFactionData(factions: Faction[], combinedData: ReactElement[]) {
     factions.forEach((faction) => {
         combinedData.push(
-            <div key={faction.slug} className={"mx-5"}>
+            <div key={faction.slug} className={box_class}>
                 <ViewEntityBox
                     entity={{
                         imageUrl: faction.imageUrl,
@@ -27,7 +28,7 @@ function prepareFactionData(factions: Faction[], combinedData: ReactElement[]) {
 function prepareStoryData(stories: (Story & { championStories: (ChampionStories & { champion: Champion })[] })[], combinedData: ReactElement[]) {
     stories.forEach((story) => {
         combinedData.push(
-            <div key={story.textId} className={"mx-5"}>
+            <div key={story.textId} className={box_class}>
                 <ViewEntityBox
                     entity={{
                         imageUrl: story.imageUrl,
@@ -45,7 +46,7 @@ function prepareStoryData(stories: (Story & { championStories: (ChampionStories 
 function prepareChampionData(champions: Champion[], combinedData: ReactElement[]) {
     champions.forEach((champion) => {
         combinedData.push(
-            <div key={champion.id} className={"mx-5"}>
+            <div key={champion.id} className={box_class}>
                 <ViewEntityBox
                     entity={{
                         imageUrl: champion.imageUrl,
@@ -61,7 +62,7 @@ function prepareChampionData(champions: Champion[], combinedData: ReactElement[]
 }
 
 const Home: NextPage = () => {
-    const grid_layout = 'h-auto grid md:grid-cols-2 xl:grid-cols-3 grid-cols-1 mx-3'
+    const grid_layout = 'h-auto grid md:grid-cols-2 xl:grid-cols-3 grid-cols-1 sm:mx-3 mx-1'
     const combinedData: ReactElement[] = [];
     const [shuffled, setShuffled] = useState<ReactElement[]>([]);
     const {data: factions, isLoading: factionLoading} = trpc.faction.getAll.useQuery();
@@ -109,7 +110,7 @@ const Home: NextPage = () => {
             </Head>
 
             <Navigation/>
-            <main className="bg-gray-800 pt-5 md:pt-2 min-h-screen h-full px-3">
+            <main className="bg-gray-800 pt-5 md:pt-2  min-h-screen h-full px-1 sm:px-3">
                 <div className={grid_layout}>
                     {shuffled}
                 </div>

@@ -1,6 +1,6 @@
 import React from "react";
 
-function Loading() {
+const Loading = () => {
     return (
         <div className={"w-full h-screen flex justify-center items-center content-center bg-gray-800"}>
             <button type="button"
