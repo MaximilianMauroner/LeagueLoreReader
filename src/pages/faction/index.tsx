@@ -12,7 +12,7 @@ import {createProxySSGHelpers} from "@trpc/react-query/ssg";
 
 
 const AllFactions: NextPage = () => {
-    const grid_layout = 'h-auto grid md:grid-cols-2 xl:grid-cols-3 grid-cols-1 mx-3'
+    const grid_layout = 'h-auto grid md:grid-cols-2 xl:grid-cols-3 grid-cols-1 sm:mx-3 mx-1'
     const {data: factions, isLoading} = trpc.faction.getAll.useQuery();
     return <>
         <Head>
@@ -21,10 +21,10 @@ const AllFactions: NextPage = () => {
                   content="List all Factions"/>
         </Head>
         <Navigation/>
-        <div className="bg-gray-800 pt-5 md:pt-2 min-h-screen h-full px-3">
+        <div className="bg-gray-800 pt-5 md:pt-2 min-h-screen h-full px-1 sm:px-3">
             <div className={grid_layout}>
                 {factions?.map((faction) => (
-                    <div key={faction.slug} className={"mx-5"}>
+                    <div key={faction.slug} className={"mx-1 sm:mx-3 md:mx-5"}>
                         <ViewEntityBox
                             entity={{
                                 imageUrl: faction.imageUrl,

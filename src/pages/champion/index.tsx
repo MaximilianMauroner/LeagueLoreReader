@@ -17,7 +17,7 @@ import superjson from 'superjson';
 import {trpc} from '../../utils/trpc';
 
 const AllChampions: NextPage = () => {
-    const grid_layout = 'h-auto grid md:grid-cols-2 xl:grid-cols-4 grid-cols-1 mx-3'
+    const grid_layout = 'h-auto grid md:grid-cols-2 xl:grid-cols-4 grid-cols-1 sm:mx-3 mx-1'
     const {data: champions, isLoading} = trpc.champion.getAll.useQuery();
     return (
         <>
@@ -27,10 +27,10 @@ const AllChampions: NextPage = () => {
                       content="List all Champions"/>
             </Head>
             <Navigation/>
-            <div className="bg-gray-800 pt-5 md:pt-2 min-h-screen h-full px-3">
+            <div className="bg-gray-800 pt-5 md:pt-2 min-h-screen h-full px-1 sm:px-3">
                 <div className={grid_layout}>
                     {champions?.map((champion) => (
-                        <div key={champion.id} className={"mx-5"}>
+                        <div key={champion.id} className={"mx-1 md:mx-5 sm:mx-3"}>
                             <ViewEntityBox
                                 entity={{
                                     imageUrl: champion.imageUrl,
