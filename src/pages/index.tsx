@@ -104,7 +104,7 @@ const Home: NextPage = () => {
     return (
         <>
             <Head>
-                <title>League of Legends Lore Reader</title>
+                <title>League Lore Reader</title>
                 <meta name="description" content="LoreReader"/>
                 <link rel="icon" href="/favicon.ico"/>
             </Head>
