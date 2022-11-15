@@ -11,7 +11,7 @@ const entityValidator = z.object({
 })
 const ViewEntityBox: React.FC<{ entity: z.infer<typeof entityValidator> }> = ({entity}) => {
     return (
-        <Link href={entity.link} prefetch={false}>
+        <Link href={entity.link}>
             <div
                 className="py-3 px-1 md:py-6 md:px-4 max-w-4xl mx-auto grid grid-cols-1 hover:-translate-y-3 hover:scale-105 ease-in-out duration-300">
                 <div

@@ -1,9 +1,9 @@
 import React from "react";
 import Loading from "../../components/loading";
 import ViewEntityBox from "../../components/view-entity-box";
-import type {GetStaticPaths, GetStaticPropsContext, NextPage} from "next";
+import {GetStaticPaths, GetStaticPropsContext, NextPage} from "next";
 import {useRouter} from "next/router";
-import type {Champion, Faction} from "@prisma/client";
+import {Champion, Faction} from "@prisma/client";
 import {appRouter} from "../../server/trpc/router/_app";
 import {createSessionlessContext} from "../../server/trpc/context";
 import superjson from "superjson";

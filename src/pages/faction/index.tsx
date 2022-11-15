@@ -1,4 +1,4 @@
-import type {NextPage} from "next";
+import {NextPage} from "next";
 import {appRouter} from "../../server/trpc/router/_app";
 import {createSessionlessContext} from "../../server/trpc/context";
 import superjson from "superjson";

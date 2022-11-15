@@ -1,7 +1,7 @@
 import {router, publicProcedure, protectedProcedure} from "../trpc";
 import {env} from "../../../env/server.mjs";
 import {z} from "zod";
-import type {Context} from "../context"
+import {Context} from "../context"
 import {Faction} from "@prisma/client";
 
 

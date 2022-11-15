@@ -41,7 +41,7 @@ const Navigation: React.FC = () => {
         }
         setNavigation([...temp])
 
-    }, [navigation, navigationValidator, router]);
+    }, [router]);
 
     return (
         <Disclosure as="nav" className="bg-gray-900">

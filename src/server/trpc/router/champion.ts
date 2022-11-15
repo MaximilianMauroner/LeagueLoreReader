@@ -1,4 +1,4 @@
-import type {Context} from "../context";
+import {Context} from "../context";
 import {env} from "../../../env/server.mjs";
 import {Champion, StoryType} from "@prisma/client";
 import {z} from "zod";

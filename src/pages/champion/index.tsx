@@ -5,7 +5,7 @@ import Navigation from "../../components/navigation";
 import {env} from "../../env/server.mjs";
 import Head from "next/head";
 import {createProxySSGHelpers} from '@trpc/react-query/ssg';
-import type {NextPage} from 'next';
+import {NextPage} from 'next';
 import {appRouter} from '../../server/trpc/router/_app';
 import superjson from 'superjson';
 import {trpc} from '../../utils/trpc';
