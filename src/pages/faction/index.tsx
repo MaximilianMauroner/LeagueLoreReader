@@ -42,7 +42,7 @@ const AllFactions: NextPage = () => {
 export default AllFactions;
 
 export async function getStaticProps() {
-    const ssg = await createProxySSGHelpers({
+    const ssg = createProxySSGHelpers({
         router: appRouter,
         ctx: await createSessionlessContext(),
         transformer: superjson

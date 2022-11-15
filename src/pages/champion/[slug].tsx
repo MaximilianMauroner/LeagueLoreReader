@@ -125,7 +125,7 @@ const DisplayChampion: React.FC<{ champion: Champion }> = ({champion}) => {
 }
 
 export async function getStaticProps(context: GetStaticPropsContext<{ slug: string }>) {
-    const ssg = await createProxySSGHelpers({
+    const ssg = createProxySSGHelpers({
         router: appRouter,
         ctx: await createSessionlessContext(),
         transformer: superjson
