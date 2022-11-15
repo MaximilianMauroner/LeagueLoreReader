@@ -8,7 +8,7 @@ import {
     SkipPrevious,
     SkipNext
 } from '@mui/icons-material/';
-import type {Story, File, Champion} from "@prisma/client";
+import {Story, File, Champion} from "@prisma/client";
 import Link from "next/link";
 import {env} from "../env/client.mjs";
 import Image from "next/image";

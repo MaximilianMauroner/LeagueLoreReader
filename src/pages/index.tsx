@@ -1,4 +1,4 @@
-import type {NextPage} from "next";
+import {NextPage} from "next";
 import Head from "next/head";
 import {RouterTypes, trpc} from "../utils/trpc";
 import Navigation from "../components/navigation";
