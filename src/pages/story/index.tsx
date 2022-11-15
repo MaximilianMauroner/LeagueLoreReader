@@ -10,6 +10,7 @@ import {env} from "../../env/server.mjs";
 import Head from "next/head";
 import Loading from "../../components/loading";
 import {createProxySSGHelpers} from "@trpc/react-query/ssg";
+import HeadComponent from "../../components/head";
 
 
 const AllStories: NextPage = () => {
@@ -20,11 +21,7 @@ const AllStories: NextPage = () => {
     }
     return (
         <>
-            <Head>
-                <title>All Stories</title>
-                <meta name="description"
-                      content="List all Stories"/>
-            </Head>
+            <HeadComponent title={"All Stories"} description={"List all Stories"}/>
             <Navigation/>
             <div className="bg-gray-800 pt-5 md:pt-2 min-h-screen h-full px-1 sm:px-3 ">
                 <div className={grid_layout}>

@@ -6,6 +6,7 @@ import ViewEntityBox from "../components/view-entity-box";
 import React, {ReactElement, useEffect, useState} from "react";
 import Loading from "../components/loading";
 import {Champion, Faction, Story, ChampionStories} from "@prisma/client";
+import HeadComponent from "../components/head";
 
 const box_class = "md:mx-5 sm:mx-3 mx-1"
 
@@ -106,12 +107,8 @@ const Home: NextPage = () => {
 
     return (
         <>
-            <Head>
-                <title>League Lore Reader</title>
-                <meta name="description" content="LoreReader"/>
-                <link rel="icon" href="/favicon.ico"/>
-            </Head>
-
+            <HeadComponent title={"League Lore Reader"}
+                           description={"You can read and more importantly listen to the all the stories of the characters from League of Legends."}/>
             <Navigation/>
             <main className="bg-gray-800 pt-5 md:pt-2  min-h-screen h-full px-1 sm:px-3">
                 <div className={grid_layout}>

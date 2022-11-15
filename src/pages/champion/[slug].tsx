@@ -16,6 +16,7 @@ import {env} from "../../env/server.mjs";
 import Head from "next/head";
 import {createProxySSGHelpers} from "@trpc/react-query/ssg";
 import {appRouter} from "../../server/trpc/router/_app";
+import HeadComponent from "../../components/head";
 
 
 const ChampionPage: NextPage = () => {
@@ -33,11 +34,8 @@ const ChampionPage: NextPage = () => {
     }
     return (
         <>
-            <Head>
-                <title>{[championData.name, championData.title].join(" ")}</title>
-                <meta name="description"
-                      content={[championData.name, championData.title].join(" ")}/>
-            </Head>
+            <HeadComponent title={[championData.name, championData.title].join(" ")}
+                           description={[championData.name, championData.title].join(" ")}/>
             <Navigation/>
             <div className="bg-gray-800 pt-5 md:pt-2 min-h-screen h-full px-3">
                 <div className={"w-auto"}>

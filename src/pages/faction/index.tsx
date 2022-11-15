@@ -9,17 +9,14 @@ import Navigation from "../../components/navigation";
 import {env} from "../../env/server.mjs";
 import Head from "next/head";
 import {createProxySSGHelpers} from "@trpc/react-query/ssg";
+import HeadComponent from "../../components/head";
 
 
 const AllFactions: NextPage = () => {
     const grid_layout = 'h-auto grid md:grid-cols-2 xl:grid-cols-3 grid-cols-1 sm:mx-3 mx-1'
     const {data: factions} = trpc.faction.getAll.useQuery();
     return <>
-        <Head>
-            <title>All Factions</title>
-            <meta name="description"
-                  content="List all Factions"/>
-        </Head>
+        <HeadComponent title={"All Factions"} description={"List of all Factions"}/>
         <Navigation/>
         <div className="bg-gray-800 pt-5 md:pt-2 min-h-screen h-full px-1 sm:px-3">
             <div className={grid_layout}>
