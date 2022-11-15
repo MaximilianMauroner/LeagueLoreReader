@@ -13,7 +13,7 @@ const ViewEntityBox: React.FC<{ entity: z.infer<typeof entityValidator> }> = ({e
     return (
         <Link href={entity.link} prefetch={false}>
             <div
-                className="py-6 px-4 max-w-4xl mx-auto grid grid-cols-1 hover:-translate-y-3 hover:scale-105 ease-in-out duration-300">
+                className="py-3 px-1 md:py-6 md:px-4 max-w-4xl mx-auto grid grid-cols-1 hover:-translate-y-3 hover:scale-105 ease-in-out duration-300">
                 <div
                     className="z-10 relative p-3 col-start-1 row-start-1 flex flex-col-reverse rounded-lg bg-gradient-to-t from-black-75 via-black-0 ">
                     {entity.name ?

@@ -141,7 +141,7 @@ const ViewAudioFile: React.FC<{
         <div className={"my-3"}>
             <div className="bg-slate-800 border-slate-500 border-b rounded-t-xl p-4 pb-6 space-y-6">
                 <div className="flex md:flex-row flex-col items-center md:space-x-4 space-y-2 md:space-y-0">
-                    <div className={"relative w-1/2 h-64"}>
+                    <div className={"relative md:w-1/2 w-full h-64"}>
                         <Image
                             fill
                             src={story.imageUrl}
@@ -150,7 +150,7 @@ const ViewAudioFile: React.FC<{
                             priority={true}
                         />
                     </div>
-                    <div className="min-w-0 flex-auto m-0 md:m-auto font-semibold">
+                    <div className="min-w-0 flex-auto m-0 md:m-auto font-semibold mr-auto md:mr-0">
                         <h2 className="flex flex-wrap text-slate-400 text-sm leading-6 truncate space-x-1">
                             {champions.map((champion, index) => {
                                 return (

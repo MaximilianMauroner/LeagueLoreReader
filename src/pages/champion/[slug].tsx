@@ -19,7 +19,7 @@ import {appRouter} from "../../server/trpc/router/_app";
 
 
 const ChampionPage: NextPage = () => {
-    const grid_layout = 'h-auto grid md:grid-cols-2 grid-cols-1 mx-3'
+    const grid_layout = 'h-auto grid md:grid-cols-2 grid-cols-1 sm:mx-3 mx-1'
     const router = useRouter()
     let {slug} = router.query
     const slugValidator = z.string()
@@ -46,7 +46,7 @@ const ChampionPage: NextPage = () => {
                 <Heading title={"Stories"}/>
                 <div className={grid_layout}>
                     {championData.championStories.map((story) => (
-                        <div key={story.storyId} className={"mx-5"}>
+                        <div key={story.storyId} className={"md:mx-5 sm:mx-3 mx-1"}>
                             <ViewEntityBox
                                 entity={{
                                     imageUrl: story.story.imageUrl,
@@ -81,7 +81,7 @@ const ChampionPage: NextPage = () => {
                         <Heading title={"Related Champions"}/>
                         <div className={grid_layout}>
                             {relatedChampions.map((champion) => (
-                                <div key={champion.id} className={"mx-5"}>
+                                <div key={champion.id} className={"md:mx-5 sm:mx-3 mx-1"}>
                                     <ViewEntityBox
                                         entity={{
                                             imageUrl: champion.imageUrl,
@@ -104,14 +104,14 @@ const DisplayChampion: React.FC<{ champion: Champion }> = ({champion}) => {
     return (
         <div className="container mx-auto py-9 md:py-2">
             <div className="flex items-strech justify-center flex-col ">
-                <div className="flex flex-col items-strech justify-between py-6 px-6">
+                <div className="flex flex-col items-strech justify-between py-3 px-1 md:py-6 md:px-6">
                     <h1 className={"text-center pt-3 text-4xl text-white"}>{champion.name}</h1>
                     <h1 className={"text-center pb-3 text-3xl text-white"}>{champion.title}</h1>
                     <div className={"relative h-96"}>
                         <Image
                             fill
                             src={champion.imageUrl}
-                            className={"object-contain object-top"}
+                            className={"sm:object-contain object-cover rounded-xl"}
                             alt={champion.name}
                             priority={true}
                         />

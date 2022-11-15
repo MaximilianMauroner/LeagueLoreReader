@@ -15,7 +15,7 @@ import {createProxySSGHelpers} from "@trpc/react-query/ssg";
 
 
 const AllStories: NextPage = () => {
-    const grid_layout = 'h-auto grid md:grid-cols-2 xl:grid-cols-3 grid-cols-1 mx-3'
+    const grid_layout = 'h-auto grid md:grid-cols-2 xl:grid-cols-3 grid-cols-1 sm:mx-3 mx-1'
     const {data: stories, isLoading} = trpc.story.getAll.useQuery();
     if (isLoading || stories == undefined) {
         return <Loading/>
@@ -28,43 +28,22 @@ const AllStories: NextPage = () => {
                       content="List all Stories"/>
             </Head>
             <Navigation/>
-            <div className="bg-gray-800 pt-5 md:pt-2 min-h-screen h-full px-3">
-                <InfiniteScroll
-                    dataLength={stories.length} //This is important field to render the next data
-                    next={() => console.log("new data")}
-                    hasMore={true}
-                    loader={<Loading/>}
-                    endMessage={
-                        <p style={{textAlign: 'center'}}>
-                            <b>Yay! You have seen it all</b>
-                        </p>
-                    }
-                    // below props only if you need pull down functionality
-                    refreshFunction={() => console.log("refresh")}
-                    pullDownToRefresh
-                    pullDownToRefreshThreshold={50}
-                    pullDownToRefreshContent={
-                        <h3 style={{textAlign: 'center'}}>&#8595; Pull down to refresh</h3>
-                    }
-                    releaseToRefreshContent={
-                        <h3 style={{textAlign: 'center'}}>&#8593; Release to refresh</h3>
-                    }>
-                    <div className={grid_layout}>
-                        {stories?.map((story) => (
-                            <div key={story.textId} className={"mx-5"}>
-                                <ViewEntityBox
-                                    entity={{
-                                        imageUrl: story.imageUrl,
-                                        name: story.title,
-                                        title: story.championStories.map((es) => es.champion.name).join(", "),
-                                        link: "/story/" + story.textId
-                                    }}
+            <div className="bg-gray-800 pt-5 md:pt-2 min-h-screen h-full px-1 sm:px-3 ">
+                <div className={grid_layout}>
+                    {stories?.map((story) => (
+                        <div key={story.textId} className={"mx-1 sm:mx-3 md:mx-5"}>
+                            <ViewEntityBox
+                                entity={{
+                                    imageUrl: story.imageUrl,
+                                    name: story.title,
+                                    title: story.championStories.map((es) => es.champion.name).join(", "),
+                                    link: "/story/" + story.textId
+                                }}
 
-                                />
-                            </div>
-                        ))}
-                    </div>
-                </InfiniteScroll>
+                            />
+                        </div>
+                    ))}
+                </div>
             </div>
         </>
     )

@@ -20,7 +20,7 @@ import {createProxySSGHelpers} from "@trpc/react-query/ssg";
 
 
 export const StoryPage: NextPage = () => {
-    const grid_layout = 'h-auto grid md:grid-cols-2 xl:grid-cols-3 grid-cols-1 mx-3'
+    const grid_layout = 'h-auto grid md:grid-cols-2 xl:grid-cols-3 grid-cols-1 sm:mx-3 mx-1'
     const router = useRouter()
     let {slug} = router.query
     const slugValidator = z.string()
@@ -69,7 +69,7 @@ export const StoryPage: NextPage = () => {
             <Heading title={"Related Champions"}/>
             <div className={grid_layout}>
                 {story.championStories.map((cs) => (
-                    <div key={cs.champion.id} className={"mx-5"}>
+                    <div key={cs.champion.id} className={"md:mx-5 sm:mx-3 mx-1"}>
                         <ViewEntityBox
                             entity={{
                                 imageUrl: cs.champion.imageUrl,
