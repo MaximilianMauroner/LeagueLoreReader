@@ -1,4 +1,4 @@
-import {NextPage} from "next";
+import type {NextPage} from "next";
 import {appRouter} from "../../server/trpc/router/_app";
 import {createSessionlessContext} from "../../server/trpc/context";
 import superjson from "superjson";
@@ -13,7 +13,7 @@ import {createProxySSGHelpers} from "@trpc/react-query/ssg";
 
 const AllFactions: NextPage = () => {
     const grid_layout = 'h-auto grid md:grid-cols-2 xl:grid-cols-3 grid-cols-1 sm:mx-3 mx-1'
-    const {data: factions, isLoading} = trpc.faction.getAll.useQuery();
+    const {data: factions} = trpc.faction.getAll.useQuery();
     return <>
         <Head>
             <title>All Factions</title>
@@ -42,7 +42,7 @@ const AllFactions: NextPage = () => {
 export default AllFactions;
 
 export async function getStaticProps() {
-    const ssg = await createProxySSGHelpers({
+    const ssg = createProxySSGHelpers({
         router: appRouter,
         ctx: await createSessionlessContext(),
         transformer: superjson

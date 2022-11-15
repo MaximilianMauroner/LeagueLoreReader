@@ -1,9 +1,9 @@
 import React from "react";
 import Loading from "../../components/loading";
 import ViewEntityBox from "../../components/view-entity-box";
-import {GetStaticPaths, GetStaticPropsContext, NextPage} from "next";
+import type {GetStaticPaths, GetStaticPropsContext, NextPage} from "next";
 import {useRouter} from "next/router";
-import {Champion, Faction} from "@prisma/client";
+import type {Champion, Faction} from "@prisma/client";
 import {appRouter} from "../../server/trpc/router/_app";
 import {createSessionlessContext} from "../../server/trpc/context";
 import superjson from "superjson";
@@ -86,7 +86,7 @@ export const DisplayFaction: React.FC<{ faction: Faction & { champions: Champion
 export default FactionPage;
 
 export async function getStaticProps(context: GetStaticPropsContext<{ slug: string }>) {
-    const ssg = await createProxySSGHelpers({
+    const ssg =  createProxySSGHelpers({
         router: appRouter,
         ctx: await createSessionlessContext(),
         transformer: superjson

@@ -26,13 +26,50 @@ export const storyRouter = router({
                 {title: 'asc',},
                 {textId: 'asc',}
             ],
-            include: {
+            select: {
+                id: true,
+                title: true,
+                textId: true,
+                imageUrl: true,
                 championStories: {
                     include: {
                         champion: true,
                     }
                 }
-            }
+            },
         })
-    })
+    }),
+    getRandomWithLimit: publicProcedure
+        .input(
+            z.object({
+                limit: z.number().min(1),
+            }))
+        .query(async ({ctx, input}) => {
+            const stories = await ctx.prisma.story.findMany({
+                select: {
+                    id: true,
+                    title: true,
+                    textId: true,
+                    imageUrl: true,
+                    championStories: {
+                        include: {
+                            champion: true,
+                        }
+                    }
+                },
+            })
+            const ret = [];
+            let counter = 0;
+            const randomCount = stories.length > 0 ? input.limit / stories.length : 0;
+            for (const story of stories) {
+                if (counter >= input.limit) {
+                    break;
+                }
+                if (Math.random() <= randomCount) {
+                    ret.push(story)
+                    counter++;
+                }
+            }
+            return ret;
+        })
 });

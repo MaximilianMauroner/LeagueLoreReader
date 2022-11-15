@@ -8,7 +8,7 @@ import {prisma} from '../../server/db/client';
 import superjson from 'superjson';
 import {createSessionlessContext} from "../../server/trpc/context";
 import {z} from "zod";
-import {Champion} from "@prisma/client";
+import type {Champion} from "@prisma/client";
 import Image from "next/image";
 import Navigation from "../../components/navigation";
 import Heading from "../../components/heading";
@@ -125,7 +125,7 @@ const DisplayChampion: React.FC<{ champion: Champion }> = ({champion}) => {
 }
 
 export async function getStaticProps(context: GetStaticPropsContext<{ slug: string }>) {
-    const ssg = await createProxySSGHelpers({
+    const ssg = createProxySSGHelpers({
         router: appRouter,
         ctx: await createSessionlessContext(),
         transformer: superjson

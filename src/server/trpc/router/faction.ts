@@ -71,5 +71,26 @@ export const factionRouter = router({
                 {slug: 'asc',},
             ],
         })
-    })
+    }),
+    getRandomWithLimit: publicProcedure
+        .input(
+            z.object({
+                limit: z.number().min(1),
+            }))
+        .query(async ({ctx, input}) => {
+            const factions = await ctx.prisma.faction.findMany({})
+            const ret = [];
+            let counter = 0;
+            const randomCount = factions.length > 0 ? input.limit / factions.length : 0;
+            for (const faction of factions) {
+                if (counter >= input.limit) {
+                    break;
+                }
+                if (Math.random() <= randomCount) {
+                    counter++;
+                    ret.push(faction)
+                }
+            }
+            return ret;
+        })
 })

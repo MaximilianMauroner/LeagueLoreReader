@@ -1,13 +1,16 @@
 import type {NextPage} from "next";
 import Head from "next/head";
-import {trpc} from "../utils/trpc";
+import {RouterTypes, trpc} from "../utils/trpc";
 import Navigation from "../components/navigation";
 import ViewEntityBox from "../components/view-entity-box";
 import React, {ReactElement, useEffect, useState} from "react";
 import Loading from "../components/loading";
 import {Champion, Faction, Story, ChampionStories} from "@prisma/client";
 
-const box_class = "md:mx-5 sm:mx-3 mx-1" 
+const box_class = "md:mx-5 sm:mx-3 mx-1"
+
+type storyType = RouterTypes['story']['getAll']['output']
+
 
 function prepareFactionData(factions: Faction[], combinedData: ReactElement[]) {
     factions.forEach((faction) => {
@@ -25,7 +28,7 @@ function prepareFactionData(factions: Faction[], combinedData: ReactElement[]) {
     })
 }
 
-function prepareStoryData(stories: (Story & { championStories: (ChampionStories & { champion: Champion })[] })[], combinedData: ReactElement[]) {
+function prepareStoryData(stories: storyType, combinedData: ReactElement[]) {
     stories.forEach((story) => {
         combinedData.push(
             <div key={story.textId} className={box_class}>
@@ -65,9 +68,9 @@ const Home: NextPage = () => {
     const grid_layout = 'h-auto grid md:grid-cols-2 xl:grid-cols-3 grid-cols-1 sm:mx-3 mx-1'
     const combinedData: ReactElement[] = [];
     const [shuffled, setShuffled] = useState<ReactElement[]>([]);
-    const {data: factions, isLoading: factionLoading} = trpc.faction.getAll.useQuery();
-    const {data: champions, isLoading: championLoading} = trpc.champion.getAll.useQuery();
-    const {data: stories, isLoading: storyLoading} = trpc.story.getAll.useQuery();
+    const {data: factions, isLoading: factionLoading} = trpc.faction.getRandomWithLimit.useQuery({limit: 5});
+    const {data: champions, isLoading: championLoading} = trpc.champion.getRandomWithLimit.useQuery({limit: 10});
+    const {data: stories, isLoading: storyLoading} = trpc.story.getRandomWithLimit.useQuery({limit: 15});
     const [dataLoaded, setDataLoaded] = useState<boolean>(false);
 
     useEffect(() => {
@@ -104,7 +107,7 @@ const Home: NextPage = () => {
     return (
         <>
             <Head>
-                <title>League of Legends Lore Reader</title>
+                <title>League Lore Reader</title>
                 <meta name="description" content="LoreReader"/>
                 <link rel="icon" href="/favicon.ico"/>
             </Head>
