@@ -1,5 +1,6 @@
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
+/.idea
 # dependencies
 /node_modules
 /.pnp
@@ -38,11 +39,3 @@ yarn-error.log*
 
 # typescript
 *.tsbuildinfo
-
-src/pages/api/LoreFiles/*
-/.idea/
-
-/public/sw.js
-/public/sw.js.map
-/public/workbox-eac1af49.js
-/public/workbox-eac1af49.js.map

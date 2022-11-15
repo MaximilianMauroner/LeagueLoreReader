@@ -1,7 +1,6 @@
 import {NextPage} from "next";
-import {createSSGHelpers} from "@trpc/react/ssg";
-import {appRouter} from "../../server/router";
-import {createContext} from "../../server/router/context";
+import {appRouter} from "../../server/trpc/router/_app";
+import {createSessionlessContext} from "../../server/trpc/context";
 import superjson from "superjson";
 import {trpc} from "../../utils/trpc";
 import ViewEntityBox from "../../components/view-entity-box";
@@ -9,11 +8,12 @@ import React from "react";
 import Navigation from "../../components/navigation";
 import {env} from "../../env/server.mjs";
 import Head from "next/head";
+import {createProxySSGHelpers} from "@trpc/react-query/ssg";
 
 
 const AllFactions: NextPage = () => {
     const grid_layout = 'h-auto grid md:grid-cols-2 xl:grid-cols-3 grid-cols-1 mx-3'
-    const {data: factions, isLoading} = trpc.useQuery(['faction.getAll']);
+    const {data: factions, isLoading} = trpc.faction.getAll.useQuery();
     return <>
         <Head>
             <title>All Factions</title>
@@ -31,7 +31,7 @@ const AllFactions: NextPage = () => {
                                 title: faction.title,
                                 link: "/faction/" + faction.slug
                             }}
-                            
+
                         />
                     </div>
                 ))}
@@ -42,13 +42,14 @@ const AllFactions: NextPage = () => {
 export default AllFactions;
 
 export async function getStaticProps() {
-    const ssg = createSSGHelpers({
+    const ssg = await createProxySSGHelpers({
         router: appRouter,
-        ctx: await createContext(),
-        transformer: superjson, // optional - adds superjson serialization
+        ctx: await createSessionlessContext(),
+        transformer: superjson
     });
 
-    await ssg.fetchQuery('faction.getAll');
+
+    await ssg.faction.getAll.prefetch();
 
     return {
         props: {

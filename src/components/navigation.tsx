@@ -71,15 +71,12 @@ const Navigation: React.FC<{}> = () => {
                                                 key={item.name}
                                                 href={item.href}
                                                 passHref={true}
-                                            >
-                                                <a
-                                                    aria-current={item.current ? 'page' : undefined}
-                                                    className={classNames(
-                                                        item.current ? 'bg-gray-800 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white',
-                                                        'px-3 py-2 rounded-md text-sm font-medium'
-                                                    )}>
-                                                    {item.name}
-                                                </a>
+                                                aria-current={item.current ? 'page' : undefined}
+                                                className={classNames(
+                                                    item.current ? 'bg-gray-800 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white',
+                                                    'px-3 py-2 rounded-md text-sm font-medium'
+                                                )}>
+                                                {item.name}
                                             </Link>
                                         ))}
                                     </div>

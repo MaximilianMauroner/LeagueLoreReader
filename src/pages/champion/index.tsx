@@ -1,19 +1,24 @@
-import {NextPage} from "next";
-import {trpc} from "../../utils/trpc";
 import ViewEntityBox from "../../components/view-entity-box";
 import React from "react";
-import {createSSGHelpers} from "@trpc/react/ssg";
-import {appRouter} from "../../server/router";
-import {createContext} from "../../server/router/context";
-import superjson from "superjson";
+import {createContext, createSessionlessContext} from "../../server/trpc/context";
 import Navigation from "../../components/navigation";
 import {env} from "../../env/server.mjs";
 import Head from "next/head";
-
+import {CreateNextContextOptions} from "@trpc/server/dist/adapters/next";
+import {createProxySSGHelpers} from '@trpc/react-query/ssg';
+import {
+    GetStaticPaths,
+    GetStaticPropsContext,
+    InferGetStaticPropsType,
+    NextPage
+} from 'next';
+import {appRouter} from '../../server/trpc/router/_app';
+import superjson from 'superjson';
+import {trpc} from '../../utils/trpc';
 
 const AllChampions: NextPage = () => {
     const grid_layout = 'h-auto grid md:grid-cols-2 xl:grid-cols-4 grid-cols-1 mx-3'
-    const {data: champions, isLoading} = trpc.useQuery(['champion.getAll']);
+    const {data: champions, isLoading} = trpc.champion.getAll.useQuery();
     return (
         <>
             <Head>
@@ -46,13 +51,13 @@ export default AllChampions;
 
 
 export async function getStaticProps() {
-    const ssg = createSSGHelpers({
+    const ssg = await createProxySSGHelpers({
         router: appRouter,
-        ctx: await createContext(),
-        transformer: superjson, // optional - adds superjson serialization
+        ctx: await createSessionlessContext(),
+        transformer: superjson
     });
 
-    await ssg.fetchQuery('champion.getAll');
+    await ssg.champion.getAll.prefetch();
 
     return {
         props: {
