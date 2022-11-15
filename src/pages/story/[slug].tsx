@@ -3,9 +3,8 @@ import Loading from "../../components/loading";
 import ViewEntityBox from "../../components/view-entity-box";
 import {GetStaticPaths, GetStaticPropsContext, NextPage} from "next";
 import {useRouter} from "next/router";
-import {createSSGHelpers} from "@trpc/react/ssg";
-import {appRouter} from "../../server/router";
-import {createContext} from "../../server/router/context";
+import {appRouter} from "../../server/trpc/router/_app";
+import {createContext, createSessionlessContext} from "../../server/trpc/context";
 import superjson from "superjson";
 import {prisma} from "../../server/db/client";
 import {z} from "zod";
@@ -17,6 +16,7 @@ import Head from "next/head";
 import {StoryType} from "@prisma/client";
 import dynamic from 'next/dynamic'
 import {Suspense} from 'react'
+import {createProxySSGHelpers} from "@trpc/react-query/ssg";
 
 
 export const StoryPage: NextPage = () => {
@@ -25,7 +25,7 @@ export const StoryPage: NextPage = () => {
     let {slug} = router.query
     const slugValidator = z.string()
     slug = slugValidator.parse(slug)
-    const {data: story, isLoading} = trpc.useQuery(['story.bySlug', {slug}]);
+    const {data: story, isLoading} = trpc.story.bySlug.useQuery({slug});
 
     const DynamicViewAudioFile = dynamic(() => import("../../components/view-audio-file"), {
         suspense: true,
@@ -87,18 +87,16 @@ export const StoryPage: NextPage = () => {
 }
 export default StoryPage;
 
-export async function getStaticProps(context: GetStaticPropsContext<{ slug: string }>,) {
-    const ssg = createSSGHelpers({
+export async function getStaticProps(context: GetStaticPropsContext<{ slug: string }>) {
+    const ssg = await createProxySSGHelpers({
         router: appRouter,
-        ctx: await createContext(),
-        transformer: superjson,
+        ctx: await createSessionlessContext(),
+        transformer: superjson
     });
 
     const slug = context.params?.slug as string;
 
-    await ssg.fetchQuery('story.bySlug', {
-        slug,
-    });
+    await ssg.story.bySlug.prefetch({slug,});
 
     return {
         props: {

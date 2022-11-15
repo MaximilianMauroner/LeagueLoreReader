@@ -4,9 +4,8 @@ import ViewEntityBox from "../../components/view-entity-box";
 import {GetStaticPaths, GetStaticPropsContext, NextPage} from "next";
 import {useRouter} from "next/router";
 import {Champion, Faction} from "@prisma/client";
-import {createSSGHelpers} from "@trpc/react/ssg";
-import {appRouter} from "../../server/router";
-import {createContext} from "../../server/router/context";
+import {appRouter} from "../../server/trpc/router/_app";
+import {createSessionlessContext} from "../../server/trpc/context";
 import superjson from "superjson";
 import {prisma} from "../../server/db/client";
 import {z} from "zod";
@@ -16,6 +15,7 @@ import Image from "next/image";
 import Navigation from "../../components/navigation";
 import {env} from "../../env/server.mjs";
 import Head from "next/head";
+import {createProxySSGHelpers} from "@trpc/react-query/ssg";
 
 export const FactionPage: NextPage = () => {
     const grid_layout = 'h-auto grid md:grid-cols-2 xl:grid-cols-3 grid-cols-1 mx-3'
@@ -23,7 +23,7 @@ export const FactionPage: NextPage = () => {
     let {slug} = router.query
     const slugValidator = z.string()
     slug = slugValidator.parse(slug)
-    const {data: faction, isLoading} = trpc.useQuery(['faction.bySlug', {slug}]);
+    const {data: faction, isLoading} = trpc.faction.bySlug.useQuery({slug});
 
     if (isLoading || faction == null) {
         return (<Loading/>)
@@ -67,13 +67,11 @@ export const DisplayFaction: React.FC<{ faction: Faction & { champions: Champion
                     <h3 className={"text-center pb-3 text-xl text-white"}><span
                         className={"font-bold text-3xl"}>{faction?.champions.length}</span>&nbsp;Champions are part of
                         this Faction</h3>
-                    <div>
+                    <div className={"relative h-96"}>
                         <Image
+                            fill
                             src={faction.imageUrl}
-                            layout="responsive"
-                            width={1000}
-                            height={500}
-                            className={"object-cover"}
+                            className={"object-contain"}
                             alt={faction.title}
                             priority={true}
                         />
@@ -87,18 +85,16 @@ export const DisplayFaction: React.FC<{ faction: Faction & { champions: Champion
 }
 export default FactionPage;
 
-export async function getStaticProps(context: GetStaticPropsContext<{ slug: string }>,) {
-    const ssg = createSSGHelpers({
+export async function getStaticProps(context: GetStaticPropsContext<{ slug: string }>) {
+    const ssg = await createProxySSGHelpers({
         router: appRouter,
-        ctx: await createContext(),
-        transformer: superjson, // optional - adds superjson serialization
+        ctx: await createSessionlessContext(),
+        transformer: superjson
     });
 
     const slug = context.params?.slug as string;
 
-    await ssg.fetchQuery('faction.bySlug', {
-        slug,
-    });
+    ssg.faction.bySlug.prefetch({slug});
 
     return {
         props: {

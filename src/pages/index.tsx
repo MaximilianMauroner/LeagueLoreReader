@@ -2,15 +2,10 @@ import type {NextPage} from "next";
 import Head from "next/head";
 import {trpc} from "../utils/trpc";
 import Navigation from "../components/navigation";
-import {createSSGHelpers} from "@trpc/react/ssg";
-import {appRouter} from "../server/router";
-import {createContext} from "../server/router/context";
-import superjson from "superjson";
 import ViewEntityBox from "../components/view-entity-box";
 import React, {ReactElement, useEffect, useState} from "react";
 import Loading from "../components/loading";
 import {Champion, Faction, Story, ChampionStories} from "@prisma/client";
-import {env} from "../env/server.mjs";
 
 
 function prepareFactionData(factions: Faction[], combinedData: ReactElement[]) {
@@ -69,18 +64,20 @@ const Home: NextPage = () => {
     const grid_layout = 'h-auto grid md:grid-cols-2 xl:grid-cols-3 grid-cols-1 mx-3'
     const combinedData: ReactElement[] = [];
     const [shuffled, setShuffled] = useState<ReactElement[]>([]);
-    const {data: factions, isLoading: factionLoading} = trpc.useQuery(['faction.getAll']);
-    const {data: champions, isLoading: championLoading} = trpc.useQuery(['champion.getAll']);
-    const {data: stories, isLoading: storyLoading} = trpc.useQuery(['story.getAll']);
+    const {data: factions, isLoading: factionLoading} = trpc.faction.getAll.useQuery();
+    const {data: champions, isLoading: championLoading} = trpc.champion.getAll.useQuery();
+    const {data: stories, isLoading: storyLoading} = trpc.story.getAll.useQuery();
     const [dataLoaded, setDataLoaded] = useState<boolean>(false);
 
     useEffect(() => {
         const shuffle = (array: ReactElement[]) => {
             for (let i = array.length - 1; i > 0; i--) {
-                let j = Math.floor(Math.random() * (i + 1));
-                let temp = array[i];
+                const j = Math.floor(Math.random() * (i + 1));
+                const temp = array[i];
+                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
                 // @ts-ignore
                 array[i] = array[j];
+                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
                 // @ts-ignore
                 array[j] = temp;
             }
@@ -120,25 +117,5 @@ const Home: NextPage = () => {
         </>
     );
 };
-
-export async function getStaticProps() {
-    const ssg = createSSGHelpers({
-        router: appRouter,
-        ctx: await createContext(),
-        transformer: superjson,
-    });
-
-    await ssg.fetchQuery('faction.getAll');
-    await ssg.fetchQuery('champion.getAll');
-    await ssg.fetchQuery('story.getAll');
-
-    return {
-        props: {
-            trpcState: ssg.dehydrate(),
-        },
-        revalidate: Number.parseInt(env.REVALIDATE_TIME_SECONDS),
-    };
-}
-
 
 export default Home;

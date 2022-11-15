@@ -1,15 +1,12 @@
-import React, {useEffect, useState} from "react";
+import React from "react";
 import Loading from "../../components/loading";
 import ViewEntityBox from "../../components/view-entity-box";
-import {GetStaticPaths, GetStaticProps, NextPage, GetStaticPropsContext, InferGetStaticPropsType} from "next";
+import type {GetStaticPaths, NextPage, GetStaticPropsContext} from "next";
 import {useRouter} from "next/router";
 import {trpc} from "../../utils/trpc";
-import {championRouter} from "../../server/router/champion";
 import {prisma} from '../../server/db/client';
-import {createSSGHelpers} from '@trpc/react/ssg';
-import {appRouter} from '../../server/router';
 import superjson from 'superjson';
-import {createContext} from "../../server/router/context";
+import {createSessionlessContext} from "../../server/trpc/context";
 import {z} from "zod";
 import {Champion} from "@prisma/client";
 import Image from "next/image";
@@ -17,6 +14,8 @@ import Navigation from "../../components/navigation";
 import Heading from "../../components/heading";
 import {env} from "../../env/server.mjs";
 import Head from "next/head";
+import {createProxySSGHelpers} from "@trpc/react-query/ssg";
+import {appRouter} from "../../server/trpc/router/_app";
 
 
 const ChampionPage: NextPage = () => {
@@ -25,7 +24,7 @@ const ChampionPage: NextPage = () => {
     let {slug} = router.query
     const slugValidator = z.string()
     slug = slugValidator.parse(slug)
-    const {data: resData, isLoading} = trpc.useQuery(['champion.bySlug', {slug}]);
+    const {data: resData, isLoading} = trpc.champion.bySlug.useQuery({slug});
     const championData = resData?.championData
     const relatedChampions = resData?.relatedChampions
 
@@ -55,7 +54,7 @@ const ChampionPage: NextPage = () => {
                                     title: championData.name,
                                     link: "/story/" + story.story.textId
                                 }}
-                                
+
 
                             />
                         </div>
@@ -71,7 +70,7 @@ const ChampionPage: NextPage = () => {
                                     title: championData.faction.title,
                                     link: "/faction/" + championData.faction.slug
                                 }}
-                                
+
                             />
                         </div>
                     </>
@@ -90,7 +89,7 @@ const ChampionPage: NextPage = () => {
                                             title: champion.title!,
                                             link: "/champion/" + champion.slug
                                         }}
-                                        
+
                                     />
                                 </div>
                             ))}
@@ -108,37 +107,34 @@ const DisplayChampion: React.FC<{ champion: Champion }> = ({champion}) => {
                 <div className="flex flex-col items-strech justify-between py-6 px-6">
                     <h1 className={"text-center pt-3 text-4xl text-white"}>{champion.name}</h1>
                     <h1 className={"text-center pb-3 text-3xl text-white"}>{champion.title}</h1>
-                    <div>
+                    <div className={"relative h-96"}>
                         <Image
+                            fill
                             src={champion.imageUrl}
-                            layout="responsive"
-                            width={1000}
-                            height={500}
-                            className={"object-cover"}
+                            className={"object-contain object-top"}
                             alt={champion.name}
                             priority={true}
                         />
                     </div>
                     <div
-                        className={"text-center py-3 text-xl text-white"}>{"Release Date: " + champion.releaseDate}</div>
+                        className={"text-center py-3 text-xl text-white"}>{"Release Date: " + champion.releaseDate?.toLocaleDateString()}</div>
                 </div>
             </div>
         </div>
     )
 }
 
-export async function getStaticProps(context: GetStaticPropsContext<{ slug: string }>,) {
-    const ssg = createSSGHelpers({
+export async function getStaticProps(context: GetStaticPropsContext<{ slug: string }>) {
+    const ssg = await createProxySSGHelpers({
         router: appRouter,
-        ctx: await createContext(),
-        transformer: superjson, // optional - adds superjson serialization
+        ctx: await createSessionlessContext(),
+        transformer: superjson
     });
+
 
     const slug = context.params?.slug as string;
 
-    await ssg.fetchQuery('champion.bySlug', {
-        slug,
-    });
+    await ssg.champion.bySlug.prefetch({slug});
 
     return {
         props: {
