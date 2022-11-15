@@ -8,7 +8,7 @@ import {prisma} from '../../server/db/client';
 import superjson from 'superjson';
 import {createSessionlessContext} from "../../server/trpc/context";
 import {z} from "zod";
-import {Champion} from "@prisma/client";
+import type {Champion} from "@prisma/client";
 import Image from "next/image";
 import Navigation from "../../components/navigation";
 import Heading from "../../components/heading";

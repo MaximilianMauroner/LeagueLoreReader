@@ -2,7 +2,6 @@ import {useRouter} from "next/router";
 import {useEffect, useState} from "react";
 import {Disclosure} from '@headlessui/react'
 import {MenuIcon, XIcon} from '@heroicons/react/outline'
-import {Search} from '@mui/icons-material/';
 import Link from "next/link";
 import {z} from "zod";
 
@@ -42,7 +41,7 @@ const Navigation: React.FC = () => {
         }
         setNavigation([...temp])
 
-    }, [router]);
+    }, [navigation, navigationValidator, router]);
 
     return (
         <Disclosure as="nav" className="bg-gray-900">

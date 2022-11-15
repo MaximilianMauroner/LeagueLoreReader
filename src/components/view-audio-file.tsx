@@ -1,4 +1,4 @@
-import React, {ChangeEvent, Fragment, useEffect, useState} from 'react'
+import React, {Fragment, useEffect, useState} from 'react'
 import {Menu, Transition} from '@headlessui/react'
 import {
     Replay30,
@@ -8,11 +8,10 @@ import {
     SkipPrevious,
     SkipNext
 } from '@mui/icons-material/';
-import {Story, File, Champion} from "@prisma/client";
+import type {Story, File, Champion} from "@prisma/client";
 import Link from "next/link";
 import {env} from "../env/client.mjs";
 import Image from "next/image";
-import {useRouter} from "next/router";
 
 const ViewAudioFile: React.FC<{
     story: Story, champions: Champion[], file: File
