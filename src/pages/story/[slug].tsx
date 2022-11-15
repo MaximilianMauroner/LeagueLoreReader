@@ -17,6 +17,7 @@ import {StoryType} from "@prisma/client";
 import dynamic from 'next/dynamic'
 import {Suspense} from 'react'
 import {createProxySSGHelpers} from "@trpc/react-query/ssg";
+import HeadComponent from "../../components/head";
 
 
 export const StoryPage: NextPage = () => {
@@ -40,11 +41,7 @@ export const StoryPage: NextPage = () => {
         head = story.championStories.map(cs => cs.champion.name).join(", ") + " " + story.title
     }
     return <>
-        <Head>
-            <title>{head}</title>
-            <meta name="description"
-                  content={head}/>
-        </Head>
+        <HeadComponent title={head} description={head}/>
         <Navigation/>
         <div className="bg-gray-800 md:pt-5 pt-2 min-h-screen h-full px-3">
             <div className={"pb-5 text-white content-center flex flex-col items-center"}>
@@ -88,7 +85,7 @@ export const StoryPage: NextPage = () => {
 export default StoryPage;
 
 export async function getStaticProps(context: GetStaticPropsContext<{ slug: string }>) {
-    const ssg =  createProxySSGHelpers({
+    const ssg = createProxySSGHelpers({
         router: appRouter,
         ctx: await createSessionlessContext(),
         transformer: superjson

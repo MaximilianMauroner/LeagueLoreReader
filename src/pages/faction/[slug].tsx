@@ -16,6 +16,7 @@ import Navigation from "../../components/navigation";
 import {env} from "../../env/server.mjs";
 import Head from "next/head";
 import {createProxySSGHelpers} from "@trpc/react-query/ssg";
+import HeadComponent from "../../components/head";
 
 export const FactionPage: NextPage = () => {
     const grid_layout = 'h-auto grid md:grid-cols-2 xl:grid-cols-3 grid-cols-1 sm:mx-3 mx-1'
@@ -29,11 +30,7 @@ export const FactionPage: NextPage = () => {
         return (<Loading/>)
     }
     return <>
-        <Head>
-            <title>{faction.title}</title>
-            <meta name="description"
-                  content={faction.description}/>
-        </Head>
+        <HeadComponent title={faction.title} description={faction.description}/>
         <Navigation/>
         <div className="bg-gray-800 pt-5 md:pt-2 min-h-screen h-full px-3">
             <DisplayFaction faction={faction}/>
@@ -86,7 +83,7 @@ export const DisplayFaction: React.FC<{ faction: Faction & { champions: Champion
 export default FactionPage;
 
 export async function getStaticProps(context: GetStaticPropsContext<{ slug: string }>) {
-    const ssg =  createProxySSGHelpers({
+    const ssg = createProxySSGHelpers({
         router: appRouter,
         ctx: await createSessionlessContext(),
         transformer: superjson

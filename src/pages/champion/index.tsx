@@ -9,17 +9,14 @@ import {NextPage} from 'next';
 import {appRouter} from '../../server/trpc/router/_app';
 import superjson from 'superjson';
 import {trpc} from '../../utils/trpc';
+import HeadComponent from "../../components/head";
 
 const AllChampions: NextPage = () => {
     const grid_layout = 'h-auto grid md:grid-cols-2 xl:grid-cols-4 grid-cols-1 sm:mx-3 mx-1'
     const {data: champions} = trpc.champion.getAll.useQuery();
     return (
         <>
-            <Head>
-                <title>All Champions</title>
-                <meta name="description"
-                      content="List all Champions"/>
-            </Head>
+            <HeadComponent title={"All Champions"} description={"List all Champions"}/>
             <Navigation/>
             <div className="bg-gray-800 pt-5 md:pt-2 min-h-screen h-full px-1 sm:px-3">
                 <div className={grid_layout}>
