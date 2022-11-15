@@ -11,7 +11,7 @@ function classNames(...classes: string[]) {
 }
 
 
-const Navigation: React.FC<{}> = () => {
+const Navigation: React.FC = () => {
     const router = useRouter();
     const [navigation, setNavigation] = useState([
         {name: 'Home', href: '/', current: true},
@@ -26,10 +26,10 @@ const Navigation: React.FC<{}> = () => {
         current: z.boolean()
     }))
     useEffect(() => {
-        let pathname = router.pathname;
-        let temp = navigationValidator.parse(navigation)
+        const pathname = router.pathname;
+        const temp = navigationValidator.parse(navigation)
         for (let i = 0; i < temp.length; i++) {
-            let curr = temp[i]
+            const curr = temp[i]
             if (curr === undefined) {
                 return
             }
