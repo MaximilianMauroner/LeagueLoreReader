@@ -1,9 +1,9 @@
-import {Context} from "../context";
+import type {Context} from "../context";
 import {env} from "../../../env/server.mjs";
 import {Champion, StoryType} from "@prisma/client";
 import {z} from "zod";
 
-import {router, publicProcedure, protectedProcedure} from "../trpc";
+import {router, publicProcedure} from "../trpc";
 
 
 export const championRouter = router({
@@ -206,13 +206,14 @@ async function linkChampsAndStories(ctx: Context, championStories: z.infer<typeo
     for (const story of keys) {
         const champIds = championStories.get(story)
         const champIdArray: number[] = [];
-        champIds!.forEach((v) => champIdArray.push(v));
+        champIds?.forEach((v) => champIdArray.push(v));
         for (const singleChampId of champIdArray) {
             const storyRes = await ctx.prisma.story.findFirst({select: {id: true}, where: {textId: story}})
             const allChampStories = await ctx.prisma.championStories.findMany({where: {championId: singleChampId}})
             if (allChampStories.findIndex(v => v.storyId == storyRes?.id && v.championId == singleChampId) == -1) {
                 await ctx.prisma.championStories.create({
                     data: {
+                        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
                         storyId: (storyRes ? storyRes.id : undefined)!,
                         championId: singleChampId,
                     }
