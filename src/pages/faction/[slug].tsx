@@ -86,7 +86,7 @@ export const DisplayFaction: React.FC<{ faction: Faction & { champions: Champion
 export default FactionPage;
 
 export async function getStaticProps(context: GetStaticPropsContext<{ slug: string }>) {
-    const ssg = await createProxySSGHelpers({
+    const ssg =  createProxySSGHelpers({
         router: appRouter,
         ctx: await createSessionlessContext(),
         transformer: superjson

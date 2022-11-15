@@ -26,13 +26,17 @@ export const storyRouter = router({
                 {title: 'asc',},
                 {textId: 'asc',}
             ],
-            include: {
+            select: {
+                id: true,
+                title: true,
+                textId: true,
+                imageUrl: true,
                 championStories: {
                     include: {
                         champion: true,
                     }
                 }
-            }
+            },
         })
     }),
     getRandomWithLimit: publicProcedure
@@ -42,13 +46,17 @@ export const storyRouter = router({
             }))
         .query(async ({ctx, input}) => {
             const stories = await ctx.prisma.story.findMany({
-                include: {
+                select: {
+                    id: true,
+                    title: true,
+                    textId: true,
+                    imageUrl: true,
                     championStories: {
                         include: {
                             champion: true,
                         }
                     }
-                }
+                },
             })
             const ret = [];
             let counter = 0;

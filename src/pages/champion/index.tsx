@@ -51,7 +51,7 @@ export default AllChampions;
 
 
 export async function getStaticProps() {
-    const ssg = await createProxySSGHelpers({
+    const ssg = createProxySSGHelpers({
         router: appRouter,
         ctx: await createSessionlessContext(),
         transformer: superjson

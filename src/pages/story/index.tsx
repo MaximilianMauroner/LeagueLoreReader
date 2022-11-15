@@ -8,8 +8,6 @@ import React from "react";
 import Navigation from "../../components/navigation";
 import {env} from "../../env/server.mjs";
 import Head from "next/head";
-import {router} from "next/client";
-import InfiniteScroll from "react-infinite-scroll-component";
 import Loading from "../../components/loading";
 import {createProxySSGHelpers} from "@trpc/react-query/ssg";
 
@@ -39,7 +37,6 @@ const AllStories: NextPage = () => {
                                     title: story.championStories.map((es) => es.champion.name).join(", "),
                                     link: "/story/" + story.textId
                                 }}
-
                             />
                         </div>
                     ))}
@@ -51,7 +48,7 @@ const AllStories: NextPage = () => {
 export default AllStories;
 
 export async function getStaticProps() {
-    const ssg = await createProxySSGHelpers({
+    const ssg = createProxySSGHelpers({
         router: appRouter,
         ctx: await createSessionlessContext(),
         transformer: superjson
