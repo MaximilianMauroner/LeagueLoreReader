@@ -53,7 +53,28 @@ export const championRouter = router({
                 name: 'asc',
             },],
         })
-    })
+    }),
+    getRandomWithLimit: publicProcedure
+        .input(
+            z.object({
+                limit: z.number().min(1),
+            }))
+        .query(async ({ctx, input}) => {
+            const champions = await ctx.prisma.champion.findMany({})
+            const ret = [];
+            let counter = 0;
+            const randomCount = champions.length > 0 ? input.limit / champions.length : 0;
+            for (const champion of champions) {
+                if (counter >= input.limit) {
+                    break;
+                }
+                if (Math.random() <= randomCount) {
+                    counter++;
+                    ret.push(champion)
+                }
+            }
+            return ret;
+        })
 })
 
 
