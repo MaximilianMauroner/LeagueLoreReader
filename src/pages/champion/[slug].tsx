@@ -1,14 +1,14 @@
 import React from "react";
 import Loading from "../../components/loading";
 import ViewEntityBox from "../../components/view-entity-box";
-import type {GetStaticPaths, NextPage, GetStaticPropsContext} from "next";
+import {GetStaticPaths, NextPage, GetStaticPropsContext} from "next";
 import {useRouter} from "next/router";
 import {trpc} from "../../utils/trpc";
 import {prisma} from '../../server/db/client';
 import superjson from 'superjson';
 import {createSessionlessContext} from "../../server/trpc/context";
 import {z} from "zod";
-import type {Champion} from "@prisma/client";
+import {Champion} from "@prisma/client";
 import Image from "next/image";
 import Navigation from "../../components/navigation";
 import Heading from "../../components/heading";

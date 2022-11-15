@@ -1,4 +1,4 @@
-import type {
+import {
     NextApiRequest,
     NextApiResponse,
 } from 'next/types';
