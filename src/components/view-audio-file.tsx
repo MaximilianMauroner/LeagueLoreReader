@@ -141,12 +141,10 @@ const ViewAudioFile: React.FC<{
         <div className={"my-3"}>
             <div className="bg-slate-800 border-slate-500 border-b rounded-t-xl p-4 pb-6 space-y-6">
                 <div className="flex md:flex-row flex-col items-center md:space-x-4 space-y-2 md:space-y-0">
-                    <div className={"w-1/2 h-full"}>
+                    <div className={"relative w-1/2 h-64"}>
                         <Image
+                            fill
                             src={story.imageUrl}
-                            layout="responsive"
-                            width={1000}
-                            height={500}
                             className={"object-top object-cover rounded-lg"}
                             alt={story.title}
                             priority={true}
@@ -157,10 +155,8 @@ const ViewAudioFile: React.FC<{
                             {champions.map((champion, index) => {
                                 return (
                                     <Link key={champion.id} href={"/champion/" + champion.slug} passHref={true}>
-                                        <a>
-                                            <span className={"hover:underline"}>{champion.name}</span>
-                                            {index < champions.length - 1 ? ", " : null}
-                                        </a>
+                                        <span className={"hover:underline"}>{champion.name}</span>
+                                        {index < champions.length - 1 ? ", " : null}
                                     </Link>
                                 )
                             })}

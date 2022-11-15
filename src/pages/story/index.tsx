@@ -1,7 +1,6 @@
 import {NextPage} from "next";
-import {createSSGHelpers} from "@trpc/react/ssg";
-import {appRouter} from "../../server/router";
-import {createContext} from "../../server/router/context";
+import {appRouter} from "../../server/trpc/router/_app";
+import {createContext, createSessionlessContext} from "../../server/trpc/context";
 import superjson from "superjson";
 import {trpc} from "../../utils/trpc";
 import ViewEntityBox from "../../components/view-entity-box";
@@ -12,11 +11,12 @@ import Head from "next/head";
 import {router} from "next/client";
 import InfiniteScroll from "react-infinite-scroll-component";
 import Loading from "../../components/loading";
+import {createProxySSGHelpers} from "@trpc/react-query/ssg";
 
 
 const AllStories: NextPage = () => {
     const grid_layout = 'h-auto grid md:grid-cols-2 xl:grid-cols-3 grid-cols-1 mx-3'
-    const {data: stories, isLoading} = trpc.useQuery(['story.getAll']);
+    const {data: stories, isLoading} = trpc.story.getAll.useQuery();
     if (isLoading || stories == undefined) {
         return <Loading/>
     }
@@ -72,13 +72,14 @@ const AllStories: NextPage = () => {
 export default AllStories;
 
 export async function getStaticProps() {
-    const ssg = createSSGHelpers({
+    const ssg = await createProxySSGHelpers({
         router: appRouter,
-        ctx: await createContext(),
-        transformer: superjson, // optional - adds superjson serialization
+        ctx: await createSessionlessContext(),
+        transformer: superjson
     });
 
-    await ssg.fetchQuery('story.getAll');
+
+    await ssg.story.getAll.prefetch();
 
     return {
         props: {

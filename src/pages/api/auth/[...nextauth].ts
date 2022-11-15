@@ -2,7 +2,6 @@ import NextAuth, {type NextAuthOptions} from "next-auth";
 
 import {PrismaAdapter} from "@next-auth/prisma-adapter";
 import {prisma} from "../../../server/db/client";
-import {env} from "../../../env/server.mjs";
 import DiscordProvider from "next-auth/providers/discord";
 
 export const authOptions: NextAuthOptions = {

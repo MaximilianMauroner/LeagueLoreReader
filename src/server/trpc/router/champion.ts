@@ -1,25 +1,25 @@
-import {Context, createRouter} from "./context";
-import {env} from "../../env/server.mjs";
+import {Context} from "../context";
+import {env} from "../../../env/server.mjs";
 import {Champion, StoryType} from "@prisma/client";
 import {z} from "zod";
 
+import {router, publicProcedure, protectedProcedure} from "../trpc";
 
-export const championRouter = createRouter()
-    .query("updateAll", {
-        async resolve({ctx}) {
-            const data = await fetch(env.CHAMPIONS_URL)
-            const jsonData = await data.json()
-            const resData = await upsertInitialData(ctx, jsonData)
-            await updateTitle(ctx, resData);
-            return resData
-        },
-    })
-    .query("bySlug", {
-        input: z.object({
-            slug: z.string().min(1),
-        }),
-        async resolve({ctx, input}) {
 
+export const championRouter = router({
+    updateAll: publicProcedure.query(async ({ctx}) => {
+        const data = await fetch(env.CHAMPIONS_URL)
+        const jsonData = await data.json()
+        const resData = await upsertInitialData(ctx, jsonData)
+        await updateTitle(ctx, resData);
+        return resData
+    }),
+    bySlug: publicProcedure
+        .input(
+            z.object({
+                slug: z.string().min(1),
+            }))
+        .query(async ({ctx, input}) => {
             const champion = await ctx.prisma.champion.findFirst({
                 where: {slug: input.slug},
                 include: {
@@ -31,7 +31,7 @@ export const championRouter = createRouter()
                     }
                 }
             })
-            let stories: number[] = []
+            const stories: number[] = []
             champion?.championStories.forEach((v) => {
                 stories.push(v.storyId)
             })
@@ -46,18 +46,15 @@ export const championRouter = createRouter()
                 }
             })
             return {championData: champion, relatedChampions: relatedChamps}
-        }
+        }),
+    getAll: publicProcedure.query(({ctx}) => {
+        return ctx.prisma.champion.findMany({
+            orderBy: [{
+                name: 'asc',
+            },],
+        })
     })
-    .query("getAll", {
-            async resolve({ctx}) {
-                return await ctx.prisma.champion.findMany({
-                    orderBy: [{
-                        name: 'asc',
-                    },],
-                })
-            }
-        }
-    )
+})
 
 
 async function upsertInitialData(ctx: Context, json: any) {
@@ -92,10 +89,10 @@ async function upsertInitialData(ctx: Context, json: any) {
 }
 
 async function updateTitle(ctx: Context, resData: Champion[]) {
-    let championStories = new Map<string, Set<number>>();
+    const championStories = new Map<string, Set<number>>();
     for (const champion of resData) {
 
-        let stories = []
+        const stories = []
         const data = await fetch(champion.url);
         const jsonData = await data.json()
         await ctx.prisma.champion.update({
@@ -138,7 +135,7 @@ async function updateTitle(ctx: Context, resData: Champion[]) {
                     imageUrl: storyJSONData.story["story-sections"][0]["background-image"].uri
                 })
                 if (championStories.has(storyJSONData.id)) {
-                    let t = championStories.get(storyJSONData.id);
+                    const t = championStories.get(storyJSONData.id);
                     t?.add(champion.id);
                     championStories.set(storyJSONData.id, t!);
                 } else {
@@ -181,7 +178,7 @@ const linkValidator = z.map(z.string(), z.set(z.number()))
 async function linkChampsAndStories(ctx: Context, championStories: z.infer<typeof linkValidator>) {
 
     linkValidator.parse(championStories);
-    let keys: string[] = [];
+    const keys: string[] = [];
     championStories.forEach((stories, index) => {
         keys.push(index)
     })
@@ -190,13 +187,12 @@ async function linkChampsAndStories(ctx: Context, championStories: z.infer<typeo
         const champIdArray: number[] = [];
         champIds!.forEach((v) => champIdArray.push(v));
         for (const singleChampId of champIdArray) {
-
             const storyRes = await ctx.prisma.story.findFirst({select: {id: true}, where: {textId: story}})
             const allChampStories = await ctx.prisma.championStories.findMany({where: {championId: singleChampId}})
-            if (allChampStories.findIndex(v => v.storyId == storyRes?.id! && v.championId == singleChampId) == -1) {
+            if (allChampStories.findIndex(v => v.storyId == storyRes?.id && v.championId == singleChampId) == -1) {
                 await ctx.prisma.championStories.create({
                     data: {
-                        storyId: storyRes?.id!,
+                        storyId: (storyRes ? storyRes.id : undefined)!,
                         championId: singleChampId,
                     }
                 })

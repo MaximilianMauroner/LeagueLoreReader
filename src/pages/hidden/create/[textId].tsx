@@ -4,10 +4,10 @@ import {useRouter} from "next/router";
 import Loading from "../../../components/loading";
 import {z} from "zod";
 import {GetServerSidePropsContext, NextPage} from "next";
-import {createSSGHelpers} from "@trpc/react/ssg";
-import {appRouter} from "../../../server/router";
-import {createContext} from "../../../server/router/context";
+import {appRouter} from "../../../server/trpc/router/_app";
+import {createContext, createSessionlessContext} from "../../../server/trpc/context";
 import superjson from "superjson";
+import {createProxySSGHelpers} from "@trpc/react-query/ssg";
 
 export const CreateStory: NextPage = () => {
     const router = useRouter()
@@ -18,7 +18,7 @@ export const CreateStory: NextPage = () => {
     const slugValidator = z.string()
     textId = slugValidator.parse(textId)
 
-    const {data: story, isLoading} = trpc.useQuery(["file.create", {textId: textId}]);
+    const {data: story, isLoading} = trpc.file.create.useQuery({textId: textId});
     if (isLoading || story == undefined) {
         return <Loading/>
     }
@@ -32,25 +32,3 @@ export const CreateStory: NextPage = () => {
     </>
 }
 export default CreateStory
-
-export async function getServerSideProps(
-    context: GetServerSidePropsContext<{ textId: string }>,
-) {
-    const ssg = createSSGHelpers({
-        router: appRouter,
-        ctx: await createContext(),
-        transformer: superjson
-    });
-    const textId = context.params?.textId as string;
-
-    await ssg.prefetchQuery('file.create', {
-        textId,
-    });
-
-    return {
-        props: {
-            trpcState: ssg.dehydrate(),
-            textId,
-        },
-    };
-}
