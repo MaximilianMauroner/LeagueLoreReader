@@ -29,4 +29,4 @@ const config = {
         domains: ['images.contentstack.io'],
     },
 };
-export default config;
+export default withPWA(config);
