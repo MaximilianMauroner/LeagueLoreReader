@@ -2,6 +2,7 @@
 const nextConfig = {
   images: {
     domains: ["images.contentstack.io"],
+    unoptimized: true,
   },
 };
 

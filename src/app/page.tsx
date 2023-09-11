@@ -1,8 +1,9 @@
-import { prisma } from "@/server/db/client";
+import ViewEntityBox from "@/components/view-entity-box";
+import { db } from "@/server/db/client";
 import type { Champion, Faction } from "@prisma/client";
-import { Metadata } from "next";
+import type { Metadata } from "next";
 import { type ReactElement } from "react";
-import ViewEntityBox from "./view-entity-box";
+
 const box_class = "md:mx-5 sm:mx-3 mx-1";
 
 const Home = async () => {
@@ -17,11 +18,7 @@ const Home = async () => {
     for (let i = array.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
       const temp = array[i];
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
       array[i] = array[j];
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
       array[j] = temp;
     }
   };
@@ -48,9 +45,9 @@ export const metadata: Metadata = {
 export default Home;
 
 const getRandomChampionsWithLimit = async (limit: number) => {
-  const count = await prisma.champion.count();
+  const count = await db.champion.count();
   const ids = randomUniqueNum(count, limit);
-  return await prisma.champion.findMany({
+  return await db.champion.findMany({
     where: {
       id: {
         in: ids,
@@ -60,9 +57,9 @@ const getRandomChampionsWithLimit = async (limit: number) => {
 };
 
 const getRandomFactionWithLimit = async (limit: number) => {
-  const count = await prisma.faction.count();
+  const count = await db.faction.count();
   const ids = randomUniqueNum(count, limit);
-  return await prisma.faction.findMany({
+  return await db.faction.findMany({
     where: {
       id: {
         in: ids,
@@ -72,9 +69,9 @@ const getRandomFactionWithLimit = async (limit: number) => {
 };
 
 const getRandomStoriesWithLimit = async (limit: number) => {
-  const count = await prisma.story.count();
+  const count = await db.story.count();
   const ids = randomUniqueNum(count, limit);
-  return await prisma.story.findMany({
+  return await db.story.findMany({
     where: {
       id: {
         in: ids,

@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { z } from "zod";
 import React from "react";
 import Image from "next/image";
 
@@ -14,11 +13,11 @@ const ViewEntityBox = ({ entity }: { entity: EntityBox }) => {
     <Link href={entity.link}>
       <div className="mx-auto grid max-w-4xl grid-cols-1 px-1 py-3 duration-300 ease-in-out hover:-translate-y-3 hover:scale-105 md:px-4 md:py-6">
         <div className="from-black-75 via-black-0 relative z-10 col-start-1 row-start-1 flex flex-col-reverse rounded-lg bg-gradient-to-t p-3 ">
-          {entity.name ? (
+          {entity.name && (
             <p className="text-sm font-medium leading-4 text-white">
               {entity.title}
             </p>
-          ) : null}
+          )}
           <h1 className="mt-1 text-lg font-semibold text-white">
             {entity.name ? entity.name : entity.title}
           </h1>
