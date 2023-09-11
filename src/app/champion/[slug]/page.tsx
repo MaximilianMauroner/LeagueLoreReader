@@ -143,4 +143,11 @@ export async function generateMetadata({
   };
 }
 
+export async function generateStaticParams() {
+  const champions = await db.champion.findMany({ select: { slug: true } });
+  return champions.map(({ slug }) => {
+    return { slug };
+  });
+}
+
 export default ChampionPage;

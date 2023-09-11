@@ -92,3 +92,10 @@ export async function generateMetadata({
     description: faction.description,
   };
 }
+
+export async function generateStaticParams() {
+  const factions = await db.faction.findMany({ select: { slug: true } });
+  return factions.map(({ slug }) => {
+    return { slug };
+  });
+}
