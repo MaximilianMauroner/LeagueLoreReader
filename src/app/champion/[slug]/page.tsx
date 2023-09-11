@@ -75,7 +75,7 @@ const ChampionPage = async ({ params }: { params: { slug: string } }) => {
             </div>
           </>
         )}
-        {relatedChampions?.length && (
+        {relatedChampions?.length > 0 && (
           <>
             <Heading title={"Related Champions"} />
             <div className={grid_layout}>
