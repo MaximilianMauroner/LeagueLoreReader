@@ -1,6 +1,5 @@
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
-/.idea
 # dependencies
 /node_modules
 /.pnp
@@ -8,10 +7,6 @@
 
 # testing
 /coverage
-
-# database
-/prisma/db.sqlite
-/prisma/db.sqlite-journal
 
 # next.js
 /.next/
@@ -28,10 +23,8 @@
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
-.pnpm-debug.log*
 
 # local env files
-.env
 .env*.local
 
 # vercel
@@ -39,3 +32,4 @@ yarn-error.log*
 
 # typescript
 *.tsbuildinfo
+next-env.d.ts
