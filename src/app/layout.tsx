@@ -1,7 +1,6 @@
 "use client";
 import "./globals.css";
 import { useEffect, useState } from "react";
-import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import { usePathname } from "next/navigation";
 import { Disclosure } from "@headlessui/react";
@@ -10,11 +9,6 @@ import Link from "next/link";
 
 const inter = Inter({ subsets: ["latin"] });
 
-export const metadata: Metadata = {
-  title: "League of Legends Lore Reader",
-  description:
-    "You can read and more importantly listen to the all the stories of the characters from League of Legends.",
-};
 
 export default function RootLayout({
   children,
