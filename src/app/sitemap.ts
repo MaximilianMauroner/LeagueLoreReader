@@ -8,34 +8,36 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const championParams = await genChamp();
   const storyParams = await genStory();
   const factionParams = await genFaction();
-  const url = process.env.NEXT_PUBLIC_VERCEL_URL;
+  const baseUrl = process.env.NEXT_PUBLIC_VERCEL_URL
+    ? `https://${process.env.NEXT_PUBLIC_VERCEL_URL}`
+    : "http://localhost:3000";
   return [
     {
-      url: `${url}`,
+      url: `${baseUrl}`,
       priority: 1,
     },
     {
-      url: `${url}/faction`,
+      url: `${baseUrl}/faction`,
       priority: 1,
     },
     {
-      url: `${url}/champion`,
+      url: `${baseUrl}/champion`,
       priority: 1,
     },
     {
-      url: `${url}/story`,
+      url: `${baseUrl}/story`,
       priority: 1,
     },
     ...championParams.map((params) => ({
-      url: `${url}/champion/${params.slug}`,
+      url: `${baseUrl}/champion/${params.slug}`,
       priority: 0.5,
     })),
     ...storyParams.map((params) => ({
-      url: `${url}/story/${params.slug}`,
+      url: `${baseUrl}/story/${params.slug}`,
       priority: 0.5,
     })),
     ...factionParams.map((params) => ({
-      url: `${url}/story/${params.slug}`,
+      url: `${baseUrl}/story/${params.slug}`,
       priority: 0.5,
     })),
   ];
