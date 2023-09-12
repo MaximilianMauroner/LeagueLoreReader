@@ -9,7 +9,7 @@ export default function robots() {
         userAgent: "*",
       },
     ],
-    sitemap: `${baseUrl}/sitemap.xml`,
+    sitemap: `${baseUrl}/sitemap2.xml`,
     host: baseUrl,
   };
 }

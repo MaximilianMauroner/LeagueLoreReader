@@ -1,8 +1,7 @@
+import type { MetadataRoute } from "next";
 import { generateStaticParams as genChamp } from "./champion/[slug]/page";
 import { generateStaticParams as genStory } from "./story/[slug]/page";
 import { generateStaticParams as genFaction } from "./faction/[slug]/page";
-
-import type { MetadataRoute } from "next";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const championParams = await genChamp();

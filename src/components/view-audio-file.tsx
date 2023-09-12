@@ -273,7 +273,7 @@ export function useAudioPlayer() {
     audio.addEventListener("timeupdate", setAudioTime);
 
     // React state listeners: update DOM on React state changes
-    playing ? audio.play() : audio.pause();
+    playing ? void audio.play() : audio.pause();
 
     if (clickedTime && clickedTime !== curTime) {
       audio.currentTime = clickedTime;

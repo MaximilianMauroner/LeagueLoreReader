@@ -1,7 +1,7 @@
 {
   "crons": [
     {
-      "path": "/api/next-champ",
+      "path": "/api/generate",
       "schedule": "0 5 * * *"
     }
   ]

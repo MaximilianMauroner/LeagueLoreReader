@@ -1,7 +1,7 @@
 import Heading from "@/components/heading";
 import ViewAudioFile from "@/components/view-audio-file";
 import ViewEntityBox from "@/components/view-entity-box";
-import { db } from "@/server/db/client";
+import { db } from "@/utils/db/client";
 import { StoryType } from "@prisma/client";
 import type { Metadata } from "next";
 
