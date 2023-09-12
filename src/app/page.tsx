@@ -1,5 +1,5 @@
 import ViewEntityBox from "@/components/view-entity-box";
-import { db } from "@/server/db/client";
+import { db } from "@/utils/db/client";
 import type { Champion, Faction } from "@prisma/client";
 import type { Metadata } from "next";
 import { type ReactElement } from "react";
@@ -18,7 +18,11 @@ const Home = async () => {
     for (let i = array.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
       const temp = array[i];
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      //@ts-ignore
       array[i] = array[j];
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      //@ts-ignore
       array[j] = temp;
     }
   };
@@ -92,8 +96,8 @@ function prepareFactionData(factions: Faction[], combinedData: ReactElement[]) {
         <ViewEntityBox
           entity={{
             imageUrl: faction.imageUrl,
-            title: faction.title!,
-            link: "/faction/" + faction.slug!,
+            title: faction.title,
+            link: "/faction/" + faction.slug,
           }}
         />
       </div>,
@@ -151,7 +155,11 @@ function randomUniqueNum(range: number, outputCount: number) {
 
   for (let i = 1; i <= outputCount; i++) {
     const random = Math.floor(Math.random() * (range - i));
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    //@ts-ignore
     result.push(arr[random]);
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    //@ts-ignore
     arr[random] = arr[range - i];
   }
 

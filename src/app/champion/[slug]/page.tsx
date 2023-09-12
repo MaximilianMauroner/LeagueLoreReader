@@ -1,9 +1,9 @@
 import Heading from "@/components/heading";
 import ViewEntityBox from "@/components/view-entity-box";
-import { db } from "@/server/db/client";
 import type { Champion } from "@prisma/client";
 import Image from "next/image";
 import type { Metadata } from "next";
+import { db } from "@/utils/db/client";
 
 const getData = async (slug: string) => {
   const champion = await db.champion.findFirstOrThrow({
@@ -26,7 +26,7 @@ const getData = async (slug: string) => {
       championStories: {
         some: {
           storyId: { in: stories },
-          NOT: { championId: champion!.id },
+          NOT: { championId: champion.id },
         },
       },
     },
