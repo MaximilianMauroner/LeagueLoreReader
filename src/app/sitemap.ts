@@ -14,19 +14,19 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   return [
     {
       url: `${baseUrl}`,
-      priority: 1,
+      priority: 1.0,
     },
     {
       url: `${baseUrl}/faction`,
-      priority: 1,
+      priority: 1.0,
     },
     {
       url: `${baseUrl}/champion`,
-      priority: 1,
+      priority: 1.0,
     },
     {
       url: `${baseUrl}/story`,
-      priority: 1,
+      priority: 1.0,
     },
     ...championParams.map((params) => ({
       url: `${baseUrl}/champion/${params.slug}`,
