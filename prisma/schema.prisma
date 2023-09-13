@@ -120,3 +120,9 @@ model FileProblems {
     fileId Int
     file   File @relation(fields: [fileId], references: [id], onDelete: Cascade)
 }
+
+model Cron {
+    id        Int      @id @default(autoincrement())
+    type      String
+    createdAt DateTime @default(now())
+}
