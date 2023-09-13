@@ -11,6 +11,9 @@ const config = {
     domains: ["images.contentstack.io"],
     unoptimized: true,
   },
+  experimental: {
+    serverActions: true,
+  },
 };
 
 export default config;

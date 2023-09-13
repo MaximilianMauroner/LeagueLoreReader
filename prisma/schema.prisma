@@ -111,5 +111,12 @@ model File {
     fileName String
     storyId  Int    @unique
 
-    story Story @relation(fields: [storyId], references: [id], onDelete: Cascade)
+    story        Story          @relation(fields: [storyId], references: [id], onDelete: Cascade)
+    fileProblems FileProblems[]
+}
+
+model FileProblems {
+    id     Int  @id @default(autoincrement())
+    fileId Int
+    file   File @relation(fields: [fileId], references: [id], onDelete: Cascade)
 }
