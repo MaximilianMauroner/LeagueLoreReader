@@ -101,9 +101,3 @@ export async function generateMetadata({
     description: title,
   };
 }
-// export async function generateStaticParams() {
-//   const stories = await db.story.findMany({ select: { textId: true } });
-//   return stories.map(({ textId }) => {
-//     return { slug: textId };
-//   });
-// }
