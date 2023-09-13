@@ -1,11 +1,11 @@
 import type { MetadataRoute } from "next";
 import { generateStaticParams as genChamp } from "./champion/[slug]/page";
-import { generateStaticParams as genStory } from "./story/[slug]/page";
+import { generatePaths } from "./story/[slug]/page";
 import { generateStaticParams as genFaction } from "./faction/[slug]/page";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const championParams = await genChamp();
-  const storyParams = await genStory();
+  const storyParams = await generatePaths();
   const factionParams = await genFaction();
   const baseUrl = process.env.NEXT_PUBLIC_VERCEL_URL
     ? `https://${process.env.NEXT_PUBLIC_VERCEL_URL}`
