@@ -98,7 +98,7 @@ export const updateIndividualChampion = async (champion: Champion) => {
       id: champion.id,
     },
     data: {
-      title: jsonData.champion.title ?? "",
+      title: jsonData.champion.title,
     },
   });
 };
