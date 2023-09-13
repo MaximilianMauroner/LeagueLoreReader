@@ -1,11 +1,18 @@
 import type { MetadataRoute } from "next";
 import { generateStaticParams as genChamp } from "./champion/[slug]/page";
-import { generatePaths } from "./story/[slug]/page";
 import { generateStaticParams as genFaction } from "./faction/[slug]/page";
+import { db } from "@/utils/db/client";
+
+const tempGeneratePaths = async () => {
+  const stories = await db.story.findMany({ select: { textId: true } });
+  return stories.map(({ textId }) => {
+    return { slug: textId };
+  });
+};
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const championParams = await genChamp();
-  const storyParams = await generatePaths();
+  const storyParams = await tempGeneratePaths();
   const factionParams = await genFaction();
   const baseUrl = process.env.NEXT_PUBLIC_VERCEL_URL
     ? `https://${process.env.NEXT_PUBLIC_VERCEL_URL}`
