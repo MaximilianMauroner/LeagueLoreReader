@@ -28,13 +28,10 @@ const ViewEntityBox = ({ entity }: { entity: EntityBox }) => {
           <div className={"relative h-72 "}>
             <Image
               fill
-              placeholder="blur"
-              blurDataURL={entity.imageUrl}
               src={entity.imageUrl}
               className={"rounded-lg object-cover object-top"}
               alt={entity.name ? entity.name : entity.title}
               priority={prio}
-              loading={prio ? "eager" : "lazy"}
             />
           </div>
         </div>
