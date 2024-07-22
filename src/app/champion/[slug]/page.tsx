@@ -103,11 +103,8 @@ const DisplayChampion: React.FC<{ champion: Champion }> = ({ champion }) => {
     <div className="container mx-auto py-9 md:py-2">
       <div className="items-strech flex flex-col justify-center ">
         <div className="items-strech flex flex-col justify-between px-1 py-3 md:px-6 md:py-6">
-          <h1 className={"pt-3 text-center text-4xl text-white"}>
-            {champion.name}
-          </h1>
-          <h1 className={"pb-3 text-center text-3xl text-white"}>
-            {champion.title}
+          <h1 className={"pt-3 text-center text-3xl text-white"}>
+            <b>{champion.name}</b> <br /> {champion.title}
           </h1>
           <div className={"relative h-96"}>
             <Image

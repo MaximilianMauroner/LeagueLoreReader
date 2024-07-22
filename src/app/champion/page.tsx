@@ -1,12 +1,37 @@
+import { Pagination } from "@/components/Pagination";
 import ViewEntityBox from "@/components/view-entity-box";
 import { db } from "@/utils/db/client";
 import type { Champion } from "@prisma/client";
 import type { Metadata } from "next";
 
-const AllChampions = async () => {
+const AllChampions = async ({
+  params,
+  searchParams,
+}: {
+  params: { slug: string };
+  searchParams: Record<string, string | string[] | undefined>;
+}) => {
   const grid_layout =
     "h-auto grid md:grid-cols-2 xl:grid-cols-4 grid-cols-1 sm:mx-3 mx-1";
-  const champions = await db.champion.findMany({});
+
+  const pageNumber = +(searchParams?.page ?? 1);
+
+  const pageSize = 20;
+  const skip = (pageNumber - 1) * pageSize;
+  const take = pageSize;
+
+  const champions = await db.champion.findMany({
+    skip,
+    take,
+  });
+
+  const total = await db.champion.count();
+
+  const maxPage = Math.ceil((total ?? 1) / pageSize);
+
+  const hasNext = skip + take < total;
+  const hasPrev = pageNumber > 1;
+
   return (
     <>
       <div className="h-full min-h-screen bg-gray-800 px-1 pt-5 sm:px-3 md:pt-2">
@@ -24,6 +49,9 @@ const AllChampions = async () => {
             </div>
           ))}
         </div>
+        <Pagination
+          paginationInfo={{ current: pageNumber, hasNext, hasPrev, maxPage }}
+        />
       </div>
     </>
   );
