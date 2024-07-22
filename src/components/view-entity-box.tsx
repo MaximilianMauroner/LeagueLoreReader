@@ -34,6 +34,7 @@ const ViewEntityBox = ({ entity }: { entity: EntityBox }) => {
               className={"rounded-lg object-cover object-top"}
               alt={entity.name ? entity.name : entity.title}
               priority={prio}
+              loading={prio ? "eager" : "lazy"}
             />
           </div>
         </div>

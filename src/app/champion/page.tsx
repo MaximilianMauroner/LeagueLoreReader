@@ -36,7 +36,7 @@ const AllChampions = async ({
     <>
       <div className="h-full min-h-screen bg-gray-800 px-1 pt-5 sm:px-3 md:pt-2">
         <div className={grid_layout}>
-          {champions.map((champion: Champion) => (
+          {champions.map((champion: Champion, idx) => (
             <div key={champion.id} className={"mx-1 sm:mx-3 md:mx-5"}>
               <ViewEntityBox
                 entity={{
@@ -44,6 +44,7 @@ const AllChampions = async ({
                   name: champion.name,
                   title: champion.title!,
                   link: "/champion/" + champion.slug,
+                  priority: idx < 5,
                 }}
               />
             </div>
