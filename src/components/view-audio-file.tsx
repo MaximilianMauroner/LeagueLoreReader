@@ -1,6 +1,12 @@
 "use client";
 
-import React, { Fragment, useEffect, useState } from "react";
+import React, {
+  Fragment,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import { Menu, Transition } from "@headlessui/react";
 import {
   Replay30,
@@ -20,16 +26,34 @@ const ViewAudioFile: React.FC<{
   champions: Champion[];
   file: File;
 }> = ({ story, champions, file }) => {
+  // const {
+  //   curTime,
+  //   duration,
+  //   playing,
+  //   playbackspeed,
+  //   currentPercentage,
+  //   setPlaying,
+  //   setClickedTime,
+  //   setPlaybackspeed,
+  // } = useAudioPlayer();
+
+  const storyHTML = stripTags(story.htmlStory);
   const {
-    curTime,
+    currentTime,
     duration,
     playing,
-    playbackspeed,
+    playbackSpeed,
     currentPercentage,
-    setPlaying,
-    setClickedTime,
-    setPlaybackspeed,
-  } = useAudioPlayer();
+    voices,
+    selectedVoice,
+    togglePlaying,
+    setTime,
+    setPlaybackSpeed,
+    setVoice,
+  } = useTTS({
+    text: storyHTML,
+  });
+
   const availableSpeeds = [0.5, 0.75, 1, 1.25, 1.5, 1.75, 2, 2.5, 3];
 
   function formatDuration(toFormatDuration: number) {
@@ -43,23 +67,17 @@ const ViewAudioFile: React.FC<{
   }
 
   function skip() {
-    curTime + 15 < duration
-      ? setClickedTime(curTime + 15)
-      : setClickedTime(duration);
+    currentTime + 15 < duration ? setTime(currentTime + 15) : setTime(duration);
   }
 
   function rewind() {
-    curTime > 15 ? setClickedTime(curTime - 15) : setClickedTime(0.1);
+    currentTime > 15 ? setTime(currentTime - 15) : setTime(0.1);
   }
 
   function playPauseButton() {
-    if (curTime >= duration - 0.1 && playing) {
-      setClickedTime(0.1);
-      setPlaying(!playing);
-    }
     return (
       <button
-        onClick={() => setPlaying(!playing)}
+        onClick={togglePlaying}
         type="button"
         className="-my-2 mx-auto flex h-6 flex-none items-center justify-center rounded-full bg-slate-100 text-slate-700 shadow-md ring-1 ring-slate-900/5"
         aria-label="Pause"
@@ -99,7 +117,7 @@ const ViewAudioFile: React.FC<{
         type="button"
         className="hidden md:block"
         aria-label="Next"
-        onClick={() => setClickedTime(duration)}
+        onClick={() => setTime(duration)}
       >
         <SkipNext className="my-2 h-8 fill-white" />
       </button>
@@ -112,7 +130,7 @@ const ViewAudioFile: React.FC<{
         type="button"
         className="hidden md:block"
         aria-label="Start"
-        onClick={() => setClickedTime(0.1)}
+        onClick={() => setTime(0.1)}
       >
         <SkipPrevious className="my-2 h-8 fill-white" />
       </button>
@@ -120,7 +138,7 @@ const ViewAudioFile: React.FC<{
   }
 
   function speedRegulation(speed: number) {
-    setPlaybackspeed(speed);
+    setPlaybackSpeed(speed);
   }
 
   function speedButton() {
@@ -131,7 +149,7 @@ const ViewAudioFile: React.FC<{
             className="rounded-lg bg-slate-500 px-2 text-xs font-semibold leading-6 text-slate-100
                      ring-0 ring-inset ring-slate-500 hover:bg-slate-800"
           >
-            {playbackspeed + "x"}
+            {playbackSpeed + "x"}
           </Menu.Button>
         </div>
 
@@ -207,12 +225,12 @@ const ViewAudioFile: React.FC<{
           <div className="relative">
             <input
               type="range"
-              value={Math.floor(curTime)}
+              value={Math.floor(currentTime)}
               step="1"
               min="0"
               max={duration ? duration : `${duration}`}
               className="w-full cursor-pointer"
-              onChange={(e) => setClickedTime(Number.parseInt(e.target.value))}
+              onChange={(e) => setTime(Number.parseInt(e.target.value))}
               // onMouseUp={onScrubEnd}
               // onKeyUp={onScrubEnd}
               style={{ background: trackStyling }}
@@ -223,7 +241,7 @@ const ViewAudioFile: React.FC<{
             Your browser does not support the <code>audio</code> element.
           </audio>
           <div className="flex justify-between text-sm font-medium tabular-nums leading-6">
-            <div className="text-slate-100">{formatDuration(curTime)}</div>
+            <div className="text-slate-100">{formatDuration(currentTime)}</div>
             <div className="text-slate-400">{formatDuration(duration)}</div>
           </div>
         </div>
@@ -244,62 +262,6 @@ const ViewAudioFile: React.FC<{
   );
 };
 export default ViewAudioFile;
-
-export function useAudioPlayer() {
-  const [duration, setDuration] = useState<number>(0);
-  const [curTime, setCurTime] = useState<number>(0);
-  const [playing, setPlaying] = useState<boolean>(false);
-  const [clickedTime, setClickedTime] = useState<number>(0);
-  const [playbackspeed, setPlaybackspeed] = useState<number>(1);
-  const [currentPercentage] = useState<number>(0);
-
-  useEffect(() => {
-    const audio = document.getElementById("audio") as HTMLAudioElement;
-    if (audio == undefined) {
-      return;
-    }
-    audio.playbackRate = playbackspeed;
-
-    // state setters wrappers
-    const setAudioData = () => {
-      setDuration(audio.duration);
-      setCurTime(audio.currentTime);
-      setCurTime((audio.currentTime / audio.duration) * 100);
-    };
-
-    const setAudioTime = () => setCurTime(audio.currentTime);
-
-    // DOM listeners: update React state on DOM events
-    audio.addEventListener("loadeddata", setAudioData);
-
-    audio.addEventListener("timeupdate", setAudioTime);
-
-    // React state listeners: update DOM on React state changes
-    playing ? void audio.play() : audio.pause();
-
-    if (clickedTime && clickedTime !== curTime) {
-      audio.currentTime = clickedTime;
-      setClickedTime(0);
-    }
-
-    // effect cleanup
-    return () => {
-      audio.removeEventListener("loadeddata", setAudioData);
-      audio.removeEventListener("timeupdate", setAudioTime);
-    };
-  });
-
-  return {
-    curTime,
-    duration,
-    playing,
-    playbackspeed,
-    currentPercentage,
-    setPlaying,
-    setClickedTime,
-    setPlaybackspeed,
-  };
-}
 
 const StoryProblem = ({ fileId }: { fileId: number }) => {
   const [loading, setLoading] = useState<boolean>(false);
@@ -359,3 +321,151 @@ const StoryProblem = ({ fileId }: { fileId: number }) => {
     </form>
   );
 };
+
+interface UseTTSOptions {
+  text: string;
+  initialVoice?: SpeechSynthesisVoice;
+  initialRate?: number;
+}
+
+interface UseTTSResult {
+  currentTime: number;
+  duration: number;
+  playing: boolean;
+  playbackSpeed: number;
+  currentPercentage: number;
+  voices: SpeechSynthesisVoice[];
+  selectedVoice: SpeechSynthesisVoice | null;
+  togglePlaying: () => void;
+  setTime: (time: number) => void;
+  setPlaybackSpeed: (speed: number) => void;
+  setVoice: (voice: SpeechSynthesisVoice) => void;
+}
+
+export function useTTS({
+  text,
+  initialVoice,
+  initialRate = 1,
+}: UseTTSOptions): UseTTSResult {
+  const [currentTime, setCurrentTime] = useState<number>(0);
+  const [duration, setDuration] = useState<number>(0);
+  const [playing, setPlaying] = useState<boolean>(false);
+  const [playbackSpeed, setPlaybackSpeed] = useState<number>(initialRate);
+  const [voices, setVoices] = useState<SpeechSynthesisVoice[]>([]);
+  const [selectedVoice, setSelectedVoice] =
+    useState<SpeechSynthesisVoice | null>(initialVoice ?? null);
+
+  const utteranceRef = useRef<SpeechSynthesisUtterance | null>(null);
+  const intervalRef = useRef<number | null>(null);
+
+  useEffect(() => {
+    const synth = window.speechSynthesis;
+    utteranceRef.current = new SpeechSynthesisUtterance(text);
+
+    const loadVoices = () => {
+      const availableVoices = synth.getVoices();
+      setVoices(availableVoices);
+      if (!selectedVoice && availableVoices.length > 0 && availableVoices[0]) {
+        setSelectedVoice(availableVoices[0]);
+      }
+    };
+
+    loadVoices();
+    if (synth.onvoiceschanged !== undefined) {
+      synth.onvoiceschanged = loadVoices;
+    }
+
+    return () => {
+      synth.cancel();
+      if (intervalRef.current) clearInterval(intervalRef.current);
+    };
+  }, [text]);
+
+  useEffect(() => {
+    if (utteranceRef.current) {
+      utteranceRef.current.rate = playbackSpeed;
+      utteranceRef.current.voice = selectedVoice;
+    }
+  }, [playbackSpeed, selectedVoice]);
+
+  const togglePlaying = useCallback(() => {
+    const synth = window.speechSynthesis;
+    if (playing) {
+      synth.pause();
+      if (intervalRef.current) clearInterval(intervalRef.current);
+    } else {
+      if (synth.paused) {
+        synth.resume();
+      } else {
+        if (utteranceRef.current) {
+          utteranceRef.current.onstart = () => {
+            console.log(utteranceRef.current);
+            setDuration(utteranceRef.current!.text.length / 5); // Rough estimate
+          };
+          utteranceRef.current.onend = () => {
+            setPlaying(false);
+            setCurrentTime(0);
+            setDuration(currentTime);
+            if (intervalRef.current) clearInterval(intervalRef.current);
+          };
+          synth.speak(utteranceRef.current);
+        }
+      }
+      intervalRef.current = window.setInterval(() => {
+        setCurrentTime((prevTime) => prevTime + 0.1);
+      }, 100);
+    }
+    setPlaying(!playing);
+  }, [playing]);
+
+  const setTime = useCallback(
+    (time: number) => {
+      const synth = window.speechSynthesis;
+      synth.cancel();
+      setCurrentTime(time);
+      if (utteranceRef.current) {
+        const newUtterance = new SpeechSynthesisUtterance(
+          utteranceRef.current.text.substring(Math.floor(time * 5)),
+        );
+        newUtterance.voice = selectedVoice;
+        newUtterance.rate = playbackSpeed;
+        utteranceRef.current = newUtterance;
+        if (playing) {
+          synth.speak(newUtterance);
+        }
+      }
+    },
+    [playing, selectedVoice, playbackSpeed],
+  );
+
+  const setVoice = useCallback((voice: SpeechSynthesisVoice) => {
+    setSelectedVoice(voice);
+  }, []);
+
+  const currentPercentage = duration > 0 ? (currentTime / duration) * 100 : 0;
+
+  return {
+    currentTime,
+    duration,
+    playing,
+    playbackSpeed,
+    currentPercentage,
+    voices,
+    selectedVoice,
+    togglePlaying,
+    setTime,
+    setPlaybackSpeed,
+    setVoice,
+  };
+}
+
+function stripTags(input: string): string {
+  // Check if DOMParser is available (browser environment)
+  if (typeof DOMParser !== "undefined") {
+    const doc = new DOMParser().parseFromString(input, "text/html");
+    return doc.body.textContent ?? "";
+  } else {
+    // Server-side or environments without DOMParser
+    return input.replace(/<\/?[^>]+(>|$)/g, "");
+  }
+}
