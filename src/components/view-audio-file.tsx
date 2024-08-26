@@ -1,12 +1,6 @@
 "use client";
 
-import React, {
-  Fragment,
-  useCallback,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
+import React, { Fragment, useEffect, useState } from "react";
 import { Menu, Transition } from "@headlessui/react";
 import {
   Replay30,
@@ -20,30 +14,22 @@ import type { Story, File, Champion } from "@prisma/client";
 import Link from "next/link";
 import Image from "next/image";
 import { saveFileProblem } from "@/app/actions";
-import { useTTS } from "./text-to-speech";
 
 const ViewAudioFile: React.FC<{
   story: Story;
   champions: Champion[];
   file: File;
 }> = ({ story, champions, file }) => {
-  const storyHTML = stripTags(story.htmlStory);
   const {
-    currentTime,
+    curTime,
     duration,
     playing,
-    playbackSpeed,
+    playbackspeed,
     currentPercentage,
-    voices,
-    selectedVoice,
-    togglePlaying,
-    setTime,
-    setPlaybackSpeed,
-    setVoice,
-  } = useTTS({
-    text: storyHTML,
-  });
-
+    setPlaying,
+    setClickedTime,
+    setPlaybackspeed,
+  } = useAudioPlayer();
   const availableSpeeds = [0.5, 0.75, 1, 1.25, 1.5, 1.75, 2, 2.5, 3];
 
   function formatDuration(toFormatDuration: number) {
@@ -57,17 +43,23 @@ const ViewAudioFile: React.FC<{
   }
 
   function skip() {
-    currentTime + 15 < duration ? setTime(currentTime + 15) : setTime(duration);
+    curTime + 15 < duration
+      ? setClickedTime(curTime + 15)
+      : setClickedTime(duration);
   }
 
   function rewind() {
-    currentTime > 15 ? setTime(currentTime - 15) : setTime(0.1);
+    curTime > 15 ? setClickedTime(curTime - 15) : setClickedTime(0.1);
   }
 
   function playPauseButton() {
+    if (curTime >= duration - 0.1 && playing) {
+      setClickedTime(0.1);
+      setPlaying(!playing);
+    }
     return (
       <button
-        onClick={togglePlaying}
+        onClick={() => setPlaying(!playing)}
         type="button"
         className="-my-2 mx-auto flex h-6 flex-none items-center justify-center rounded-full bg-slate-100 text-slate-700 shadow-md ring-1 ring-slate-900/5"
         aria-label="Pause"
@@ -107,7 +99,7 @@ const ViewAudioFile: React.FC<{
         type="button"
         className="hidden md:block"
         aria-label="Next"
-        onClick={() => setTime(duration)}
+        onClick={() => setClickedTime(duration)}
       >
         <SkipNext className="my-2 h-8 fill-white" />
       </button>
@@ -120,7 +112,7 @@ const ViewAudioFile: React.FC<{
         type="button"
         className="hidden md:block"
         aria-label="Start"
-        onClick={() => setTime(0.1)}
+        onClick={() => setClickedTime(0.1)}
       >
         <SkipPrevious className="my-2 h-8 fill-white" />
       </button>
@@ -128,15 +120,18 @@ const ViewAudioFile: React.FC<{
   }
 
   function speedRegulation(speed: number) {
-    setPlaybackSpeed(speed);
+    setPlaybackspeed(speed);
   }
 
   function speedButton() {
     return (
       <Menu as="div" className="relative inline-block text-left">
         <div>
-          <Menu.Button className="rounded-lg bg-slate-500 px-2 text-xs font-semibold leading-6 text-slate-100 ring-0 ring-inset ring-slate-500 hover:bg-slate-800">
-            {playbackSpeed + "x"}
+          <Menu.Button
+            className="rounded-lg bg-slate-500 px-2 text-xs font-semibold leading-6 text-slate-100
+                     ring-0 ring-inset ring-slate-500 hover:bg-slate-800"
+          >
+            {playbackspeed + "x"}
           </Menu.Button>
         </div>
 
@@ -149,7 +144,10 @@ const ViewAudioFile: React.FC<{
           leaveFrom="transform opacity-100 scale-100"
           leaveTo="transform opacity-0 scale-95"
         >
-          <Menu.Items className="absolute right-0 mt-2 origin-top-right rounded-lg bg-slate-500 text-xs font-semibold leading-6 text-slate-100 ring-0 ring-inset ring-slate-500">
+          <Menu.Items
+            className="absolute right-0 mt-2 origin-top-right rounded-lg bg-slate-500 text-xs font-semibold leading-6 text-slate-100
+                                             ring-0 ring-inset ring-slate-500"
+          >
             <div className="py-1">
               {availableSpeeds.map((singleSpeed) => (
                 <Menu.Item key={singleSpeed}>
@@ -170,44 +168,7 @@ const ViewAudioFile: React.FC<{
     );
   }
 
-  function voiceHandler() {
-    return (
-      <Menu as="div" className="relative inline-block text-left">
-        <div>
-          <Menu.Button className="rounded-lg bg-slate-500 px-2 text-xs font-semibold leading-6 text-slate-100 ring-0 ring-inset ring-slate-500 hover:bg-slate-800">
-            {selectedVoice?.name}
-          </Menu.Button>
-        </div>
-
-        <Transition
-          as={Fragment}
-          enter="transition ease-out duration-100"
-          enterFrom="transform opacity-0 scale-95"
-          enterTo="transform opacity-100 scale-100"
-          leave="transition ease-in duration-75"
-          leaveFrom="transform opacity-100 scale-100"
-          leaveTo="transform opacity-0 scale-95"
-        >
-          <Menu.Items className="absolute right-0 mt-2 origin-top-right rounded-lg bg-slate-500 text-xs font-semibold leading-6 text-slate-100 ring-0 ring-inset ring-slate-500">
-            <div className="py-1">
-              {voices.map((voice) => (
-                <Menu.Item key={voice.voiceURI}>
-                  <button
-                    className={
-                      "w-full rounded-lg bg-slate-500 px-2 text-right text-xs font-semibold leading-6 text-slate-100 ring-0 ring-inset ring-slate-500 hover:bg-slate-400"
-                    }
-                    onClick={() => setVoice(voice)}
-                  >
-                    {voice.name}
-                  </button>
-                </Menu.Item>
-              ))}
-            </div>
-          </Menu.Items>
-        </Transition>
-      </Menu>
-    );
-  }
+  const filePath = process.env.NEXT_PUBLIC_FILE_PATH + file.fileName;
   const trackStyling = `-webkit-gradient(linear, 0% 0%, 100% 0%, color-stop(${currentPercentage}, #fff), color-stop(${currentPercentage}, #777))`;
 
   return (
@@ -246,19 +207,23 @@ const ViewAudioFile: React.FC<{
           <div className="relative">
             <input
               type="range"
-              value={Math.floor(currentTime)}
+              value={Math.floor(curTime)}
               step="1"
               min="0"
               max={duration ? duration : `${duration}`}
               className="w-full cursor-pointer"
-              onChange={(e) => setTime(Number.parseInt(e.target.value))}
+              onChange={(e) => setClickedTime(Number.parseInt(e.target.value))}
               // onMouseUp={onScrubEnd}
               // onKeyUp={onScrubEnd}
               style={{ background: trackStyling }}
             />
           </div>
+          <audio id="audio">
+            <source src={filePath} />
+            Your browser does not support the <code>audio</code> element.
+          </audio>
           <div className="flex justify-between text-sm font-medium tabular-nums leading-6">
-            <div className="text-slate-100">{formatDuration(currentTime)}</div>
+            <div className="text-slate-100">{formatDuration(curTime)}</div>
             <div className="text-slate-400">{formatDuration(duration)}</div>
           </div>
         </div>
@@ -273,13 +238,68 @@ const ViewAudioFile: React.FC<{
           {skipButton()}
           {endButton()}
           {speedButton()}
-          {voiceHandler()}
         </div>
       </div>
     </div>
   );
 };
 export default ViewAudioFile;
+
+export function useAudioPlayer() {
+  const [duration, setDuration] = useState<number>(0);
+  const [curTime, setCurTime] = useState<number>(0);
+  const [playing, setPlaying] = useState<boolean>(false);
+  const [clickedTime, setClickedTime] = useState<number>(0);
+  const [playbackspeed, setPlaybackspeed] = useState<number>(1);
+  const [currentPercentage] = useState<number>(0);
+
+  useEffect(() => {
+    const audio = document.getElementById("audio") as HTMLAudioElement;
+    if (audio == undefined) {
+      return;
+    }
+    audio.playbackRate = playbackspeed;
+
+    // state setters wrappers
+    const setAudioData = () => {
+      setDuration(audio.duration);
+      setCurTime(audio.currentTime);
+      setCurTime((audio.currentTime / audio.duration) * 100);
+    };
+
+    const setAudioTime = () => setCurTime(audio.currentTime);
+
+    // DOM listeners: update React state on DOM events
+    audio.addEventListener("loadeddata", setAudioData);
+
+    audio.addEventListener("timeupdate", setAudioTime);
+
+    // React state listeners: update DOM on React state changes
+    playing ? void audio.play() : audio.pause();
+
+    if (clickedTime && clickedTime !== curTime) {
+      audio.currentTime = clickedTime;
+      setClickedTime(0);
+    }
+
+    // effect cleanup
+    return () => {
+      audio.removeEventListener("loadeddata", setAudioData);
+      audio.removeEventListener("timeupdate", setAudioTime);
+    };
+  });
+
+  return {
+    curTime,
+    duration,
+    playing,
+    playbackspeed,
+    currentPercentage,
+    setPlaying,
+    setClickedTime,
+    setPlaybackspeed,
+  };
+}
 
 const StoryProblem = ({ fileId }: { fileId: number }) => {
   const [loading, setLoading] = useState<boolean>(false);
@@ -339,14 +359,3 @@ const StoryProblem = ({ fileId }: { fileId: number }) => {
     </form>
   );
 };
-
-function stripTags(input: string): string {
-  // Check if DOMParser is available (browser environment)
-  if (typeof DOMParser !== "undefined") {
-    const doc = new DOMParser().parseFromString(input, "text/html");
-    return doc.body.textContent ?? "";
-  } else {
-    // Server-side or environments without DOMParser
-    return input.replace(/<\/?[^>]+(>|$)/g, "");
-  }
-}
