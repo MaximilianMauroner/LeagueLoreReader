@@ -20,6 +20,7 @@
     "@t3-oss/env-nextjs": "^0.6.1",
     "basic-ftp": "^5.0.3",
     "next": "^14.2.5",
+    "posthog-js": "^1.157.2",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "zod": "^3.22.2"
