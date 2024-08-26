@@ -20,23 +20,13 @@ import type { Story, File, Champion } from "@prisma/client";
 import Link from "next/link";
 import Image from "next/image";
 import { saveFileProblem } from "@/app/actions";
+import { useTTS } from "./text-to-speech";
 
 const ViewAudioFile: React.FC<{
   story: Story;
   champions: Champion[];
   file: File;
 }> = ({ story, champions, file }) => {
-  // const {
-  //   curTime,
-  //   duration,
-  //   playing,
-  //   playbackspeed,
-  //   currentPercentage,
-  //   setPlaying,
-  //   setClickedTime,
-  //   setPlaybackspeed,
-  // } = useAudioPlayer();
-
   const storyHTML = stripTags(story.htmlStory);
   const {
     currentTime,
@@ -145,10 +135,7 @@ const ViewAudioFile: React.FC<{
     return (
       <Menu as="div" className="relative inline-block text-left">
         <div>
-          <Menu.Button
-            className="rounded-lg bg-slate-500 px-2 text-xs font-semibold leading-6 text-slate-100
-                     ring-0 ring-inset ring-slate-500 hover:bg-slate-800"
-          >
+          <Menu.Button className="rounded-lg bg-slate-500 px-2 text-xs font-semibold leading-6 text-slate-100 ring-0 ring-inset ring-slate-500 hover:bg-slate-800">
             {playbackSpeed + "x"}
           </Menu.Button>
         </div>
@@ -162,10 +149,7 @@ const ViewAudioFile: React.FC<{
           leaveFrom="transform opacity-100 scale-100"
           leaveTo="transform opacity-0 scale-95"
         >
-          <Menu.Items
-            className="absolute right-0 mt-2 origin-top-right rounded-lg bg-slate-500 text-xs font-semibold leading-6 text-slate-100
-                                             ring-0 ring-inset ring-slate-500"
-          >
+          <Menu.Items className="absolute right-0 mt-2 origin-top-right rounded-lg bg-slate-500 text-xs font-semibold leading-6 text-slate-100 ring-0 ring-inset ring-slate-500">
             <div className="py-1">
               {availableSpeeds.map((singleSpeed) => (
                 <Menu.Item key={singleSpeed}>
@@ -186,7 +170,44 @@ const ViewAudioFile: React.FC<{
     );
   }
 
-  const filePath = process.env.NEXT_PUBLIC_FILE_PATH + file.fileName;
+  function voiceHandler() {
+    return (
+      <Menu as="div" className="relative inline-block text-left">
+        <div>
+          <Menu.Button className="rounded-lg bg-slate-500 px-2 text-xs font-semibold leading-6 text-slate-100 ring-0 ring-inset ring-slate-500 hover:bg-slate-800">
+            {selectedVoice?.name}
+          </Menu.Button>
+        </div>
+
+        <Transition
+          as={Fragment}
+          enter="transition ease-out duration-100"
+          enterFrom="transform opacity-0 scale-95"
+          enterTo="transform opacity-100 scale-100"
+          leave="transition ease-in duration-75"
+          leaveFrom="transform opacity-100 scale-100"
+          leaveTo="transform opacity-0 scale-95"
+        >
+          <Menu.Items className="absolute right-0 mt-2 origin-top-right rounded-lg bg-slate-500 text-xs font-semibold leading-6 text-slate-100 ring-0 ring-inset ring-slate-500">
+            <div className="py-1">
+              {voices.map((voice) => (
+                <Menu.Item key={voice.voiceURI}>
+                  <button
+                    className={
+                      "w-full rounded-lg bg-slate-500 px-2 text-right text-xs font-semibold leading-6 text-slate-100 ring-0 ring-inset ring-slate-500 hover:bg-slate-400"
+                    }
+                    onClick={() => setVoice(voice)}
+                  >
+                    {voice.name}
+                  </button>
+                </Menu.Item>
+              ))}
+            </div>
+          </Menu.Items>
+        </Transition>
+      </Menu>
+    );
+  }
   const trackStyling = `-webkit-gradient(linear, 0% 0%, 100% 0%, color-stop(${currentPercentage}, #fff), color-stop(${currentPercentage}, #777))`;
 
   return (
@@ -236,10 +257,6 @@ const ViewAudioFile: React.FC<{
               style={{ background: trackStyling }}
             />
           </div>
-          <audio id="audio">
-            <source src={filePath} />
-            Your browser does not support the <code>audio</code> element.
-          </audio>
           <div className="flex justify-between text-sm font-medium tabular-nums leading-6">
             <div className="text-slate-100">{formatDuration(currentTime)}</div>
             <div className="text-slate-400">{formatDuration(duration)}</div>
@@ -256,6 +273,7 @@ const ViewAudioFile: React.FC<{
           {skipButton()}
           {endButton()}
           {speedButton()}
+          {voiceHandler()}
         </div>
       </div>
     </div>
@@ -321,143 +339,6 @@ const StoryProblem = ({ fileId }: { fileId: number }) => {
     </form>
   );
 };
-
-interface UseTTSOptions {
-  text: string;
-  initialVoice?: SpeechSynthesisVoice;
-  initialRate?: number;
-}
-
-interface UseTTSResult {
-  currentTime: number;
-  duration: number;
-  playing: boolean;
-  playbackSpeed: number;
-  currentPercentage: number;
-  voices: SpeechSynthesisVoice[];
-  selectedVoice: SpeechSynthesisVoice | null;
-  togglePlaying: () => void;
-  setTime: (time: number) => void;
-  setPlaybackSpeed: (speed: number) => void;
-  setVoice: (voice: SpeechSynthesisVoice) => void;
-}
-
-export function useTTS({
-  text,
-  initialVoice,
-  initialRate = 1,
-}: UseTTSOptions): UseTTSResult {
-  const [currentTime, setCurrentTime] = useState<number>(0);
-  const [duration, setDuration] = useState<number>(0);
-  const [playing, setPlaying] = useState<boolean>(false);
-  const [playbackSpeed, setPlaybackSpeed] = useState<number>(initialRate);
-  const [voices, setVoices] = useState<SpeechSynthesisVoice[]>([]);
-  const [selectedVoice, setSelectedVoice] =
-    useState<SpeechSynthesisVoice | null>(initialVoice ?? null);
-
-  const utteranceRef = useRef<SpeechSynthesisUtterance | null>(null);
-  const intervalRef = useRef<number | null>(null);
-
-  useEffect(() => {
-    const synth = window.speechSynthesis;
-    utteranceRef.current = new SpeechSynthesisUtterance(text);
-
-    const loadVoices = () => {
-      const availableVoices = synth.getVoices();
-      setVoices(availableVoices);
-      if (!selectedVoice && availableVoices.length > 0 && availableVoices[0]) {
-        setSelectedVoice(availableVoices[0]);
-      }
-    };
-
-    loadVoices();
-    if (synth.onvoiceschanged !== undefined) {
-      synth.onvoiceschanged = loadVoices;
-    }
-
-    return () => {
-      synth.cancel();
-      if (intervalRef.current) clearInterval(intervalRef.current);
-    };
-  }, [text]);
-
-  useEffect(() => {
-    if (utteranceRef.current) {
-      utteranceRef.current.rate = playbackSpeed;
-      utteranceRef.current.voice = selectedVoice;
-    }
-  }, [playbackSpeed, selectedVoice]);
-
-  const togglePlaying = useCallback(() => {
-    const synth = window.speechSynthesis;
-    if (playing) {
-      synth.pause();
-      if (intervalRef.current) clearInterval(intervalRef.current);
-    } else {
-      if (synth.paused) {
-        synth.resume();
-      } else {
-        if (utteranceRef.current) {
-          utteranceRef.current.onstart = () => {
-            console.log(utteranceRef.current);
-            setDuration(utteranceRef.current!.text.length / 5); // Rough estimate
-          };
-          utteranceRef.current.onend = () => {
-            setPlaying(false);
-            setCurrentTime(0);
-            setDuration(currentTime);
-            if (intervalRef.current) clearInterval(intervalRef.current);
-          };
-          synth.speak(utteranceRef.current);
-        }
-      }
-      intervalRef.current = window.setInterval(() => {
-        setCurrentTime((prevTime) => prevTime + 0.1);
-      }, 100);
-    }
-    setPlaying(!playing);
-  }, [playing]);
-
-  const setTime = useCallback(
-    (time: number) => {
-      const synth = window.speechSynthesis;
-      synth.cancel();
-      setCurrentTime(time);
-      if (utteranceRef.current) {
-        const newUtterance = new SpeechSynthesisUtterance(
-          utteranceRef.current.text.substring(Math.floor(time * 5)),
-        );
-        newUtterance.voice = selectedVoice;
-        newUtterance.rate = playbackSpeed;
-        utteranceRef.current = newUtterance;
-        if (playing) {
-          synth.speak(newUtterance);
-        }
-      }
-    },
-    [playing, selectedVoice, playbackSpeed],
-  );
-
-  const setVoice = useCallback((voice: SpeechSynthesisVoice) => {
-    setSelectedVoice(voice);
-  }, []);
-
-  const currentPercentage = duration > 0 ? (currentTime / duration) * 100 : 0;
-
-  return {
-    currentTime,
-    duration,
-    playing,
-    playbackSpeed,
-    currentPercentage,
-    voices,
-    selectedVoice,
-    togglePlaying,
-    setTime,
-    setPlaybackSpeed,
-    setVoice,
-  };
-}
 
 function stripTags(input: string): string {
   // Check if DOMParser is available (browser environment)
