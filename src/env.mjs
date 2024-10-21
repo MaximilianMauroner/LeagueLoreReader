@@ -30,8 +30,6 @@ export const env = createEnv({
   client: {
     NEXT_PUBLIC_FILE_PATH: z.string().url(),
     NEXT_PUBLIC_VERCEL_URL: z.string(),
-    NEXT_PUBLIC_POSTHOG_KEY: z.string(),
-    NEXT_PUBLIC_POSTHOG_HOST: z.string(),
   },
 
   /**
@@ -53,8 +51,6 @@ export const env = createEnv({
 
     NEXT_PUBLIC_FILE_PATH: process.env.NEXT_PUBLIC_FILE_PATH,
     NEXT_PUBLIC_VERCEL_URL: process.env.NEXT_PUBLIC_VERCEL_URL,
-    NEXT_PUBLIC_POSTHOG_KEY: process.env.NEXT_PUBLIC_POSTHOG_KEY,
-    NEXT_PUBLIC_POSTHOG_HOST: process.env.NEXT_PUBLIC_POSTHOG_HOST,
   },
   /**
    * Run `build` or `dev` with `SKIP_ENV_VALIDATION` to skip env validation.
