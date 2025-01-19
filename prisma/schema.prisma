@@ -55,10 +55,10 @@ model VerificationToken {
     @@unique([identifier, token])
 }
 
-enum StoryType {
-    BIOGRAPHY
-    COLOUR
-}
+// enum StoryType {
+//     BIOGRAPHY
+//     COLOUR
+// }
 
 model Faction {
     id          Int        @id @default(autoincrement())
@@ -90,7 +90,7 @@ model Story {
     textId          String            @unique
     imageUrl        String
     htmlStory       String //@db.LongText
-    type            StoryType
+    // type            StoryType
     file            File?
     championStories ChampionStories[]
 }
