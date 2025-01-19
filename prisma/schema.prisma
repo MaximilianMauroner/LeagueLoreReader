@@ -6,7 +6,7 @@ generator client {
 }
 
 datasource db {
-    provider = "mysql"
+    provider = "sqlite"
     url      = env("DATABASE_URL")
 }
 
@@ -17,12 +17,12 @@ model Account {
     type              String
     provider          String
     providerAccountId String
-    refresh_token     String? @db.Text
-    access_token      String? @db.Text
+    refresh_token     String? // @db.Text
+    access_token      String? // @db.Text
     expires_at        Int?
     token_type        String?
     scope             String?
-    id_token          String? @db.Text
+    id_token          String? // @db.Text
     session_state     String?
     user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
@@ -64,7 +64,7 @@ model Faction {
     id          Int        @id @default(autoincrement())
     title       String
     slug        String     @unique
-    description String     @db.Text
+    description String // @db.Text
     url         String
     imageUrl    String
     champions   Champion[]
@@ -89,7 +89,7 @@ model Story {
     title           String
     textId          String            @unique
     imageUrl        String
-    htmlStory       String            @db.LongText
+    htmlStory       String //@db.LongText
     type            StoryType
     file            File?
     championStories ChampionStories[]

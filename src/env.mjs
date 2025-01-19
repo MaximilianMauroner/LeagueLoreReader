@@ -9,10 +9,6 @@ export const env = createEnv({
   server: {
     NODE_ENV: z.enum(["development", "test", "production"]),
 
-    FTP_SERVER_USERNAME: z.string(),
-    FTP_SERVER_PASSWORD: z.string(),
-    FTP_SERVER_HOST: z.string(),
-
     DATABASE_URL: z.string().url(),
 
     FACTION_URL: z.string().url(),
@@ -28,7 +24,6 @@ export const env = createEnv({
    * `NEXT_PUBLIC_`.
    */
   client: {
-    NEXT_PUBLIC_FILE_PATH: z.string().url(),
     NEXT_PUBLIC_VERCEL_URL: z.string(),
   },
 
@@ -39,9 +34,6 @@ export const env = createEnv({
   runtimeEnv: {
     NODE_ENV: process.env.NODE_ENV,
     DATABASE_URL: process.env.DATABASE_URL,
-    FTP_SERVER_USERNAME: process.env.FTP_SERVER_USERNAME,
-    FTP_SERVER_PASSWORD: process.env.FTP_SERVER_PASSWORD,
-    FTP_SERVER_HOST: process.env.FTP_SERVER_HOST,
 
     FACTION_URL: process.env.FACTION_URL,
     SINGLE_FACTION_URL: process.env.SINGLE_FACTION_URL,
@@ -49,7 +41,6 @@ export const env = createEnv({
     SINGLE_CHAMPION_URL: process.env.SINGLE_CHAMPION_URL,
     SINGLE_STORY_URL: process.env.SINGLE_STORY_URL,
 
-    NEXT_PUBLIC_FILE_PATH: process.env.NEXT_PUBLIC_FILE_PATH,
     NEXT_PUBLIC_VERCEL_URL: process.env.NEXT_PUBLIC_VERCEL_URL,
   },
   /**

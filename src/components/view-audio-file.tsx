@@ -168,7 +168,6 @@ const ViewAudioFile: React.FC<{
     );
   }
 
-  const filePath = process.env.NEXT_PUBLIC_FILE_PATH + file.fileName;
   const trackStyling = `-webkit-gradient(linear, 0% 0%, 100% 0%, color-stop(${currentPercentage}, #fff), color-stop(${currentPercentage}, #777))`;
 
   return (
@@ -219,7 +218,7 @@ const ViewAudioFile: React.FC<{
             />
           </div>
           <audio id="audio">
-            <source src={filePath} />
+            {/* <source src={filePath} /> */}
             Your browser does not support the <code>audio</code> element.
           </audio>
           <div className="flex justify-between text-sm font-medium tabular-nums leading-6">

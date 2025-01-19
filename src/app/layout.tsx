@@ -43,6 +43,26 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
+        className={
+          inter.className +
+          " flex h-full min-h-screen w-full items-center justify-center bg-gray-800"
+        }
+      >
+        <div className="text-center text-white">
+          <h1 className="text-4xl font-bold">Maintenance Mode</h1>
+          <p className="mt-4">
+            Our website is currently undergoing maintenance with no estimated
+            time of completion. We apologize for any inconvenience caused.
+            Please check back later.
+          </p>
+        </div>
+      </body>
+    </html>
+  );
+
+  return (
+    <html lang="en">
+      <body
         className={inter.className + " h-full min-h-screen w-full bg-gray-800"}
       >
         <Disclosure as="nav" className="bg-gray-900">

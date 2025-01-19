@@ -16,12 +16,12 @@ export async function GET() {
 const validateFile = async (fileProblems: FileProblemsType) => {
   const client = new ftp.Client();
   try {
-    await client.access({
-      host: env.FTP_SERVER_HOST,
-      user: env.FTP_SERVER_USERNAME,
-      password: env.FTP_SERVER_PASSWORD,
-      secure: true,
-    });
+    // await client.access({
+    //   host: env.FTP_SERVER_HOST,
+    //   user: env.FTP_SERVER_USERNAME,
+    //   password: env.FTP_SERVER_PASSWORD,
+    //   secure: true,
+    // });
     const files = await client.list();
     for (const problem of fileProblems) {
       for (const file of files) {
