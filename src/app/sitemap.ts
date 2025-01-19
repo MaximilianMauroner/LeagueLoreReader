@@ -1,14 +1,13 @@
 import type { MetadataRoute } from "next";
 // import { generateStaticParams as genChamp } from "./champion/[slug]/page";
 // import { generateStaticParams as genFaction } from "./faction/[slug]/page";
-import { db } from "@/utils/db/client";
 
-const tempGeneratePaths = async () => {
-  const stories = await db.story.findMany({ select: { textId: true } });
-  return stories.map(({ textId }) => {
-    return { slug: textId };
-  });
-};
+// const tempGeneratePaths = async () => {
+//   const stories = await db.story.findMany({ select: { textId: true } });
+//   return stories.map(({ textId }) => {
+//     return { slug: textId };
+//   });
+// };
 
 export default function sitemap(): MetadataRoute.Sitemap {
   // const championParams = await genChamp();
